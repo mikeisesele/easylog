@@ -31,8 +31,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-
 }
 
 afterEvaluate {
@@ -42,8 +40,8 @@ afterEvaluate {
                 from(components["release"])
 
                 groupId = "com.mikeisesele"
-                artifactId = "easylog"
-                version = "2.0.1"
+                artifactId = "easylogger"
+                version = "2.1.0"
             }
         }
 
