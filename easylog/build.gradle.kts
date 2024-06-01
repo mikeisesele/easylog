@@ -39,7 +39,7 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
-                groupId = "com.misesele"
+                groupId = "com.mikeisesele"
                 artifactId = "easylog"
                 version = "1.0.0"
 //            from(components["java"])
