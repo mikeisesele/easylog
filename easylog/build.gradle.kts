@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("maven-publish")
 }
 
 android {
@@ -30,10 +31,24 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                groupId = "com.misesele"
+                artifactId = "easylog"
+                version = "1.0.0"
+//            from(components["java"])
+            }
+        }
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -41,3 +56,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+
