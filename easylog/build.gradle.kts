@@ -40,9 +40,17 @@ afterEvaluate {
         publications {
             create<MavenPublication>("mavenJava") {
                 from(components["release"])
+
                 groupId = "com.mikeisesele"
                 artifactId = "easylog"
-                version = "1.0.0"
+                version = "2.0.1"
+            }
+        }
+
+        repositories {
+            maven {
+                name = "jitpack"
+                url = uri("https://jitpack.io")
             }
         }
     }
