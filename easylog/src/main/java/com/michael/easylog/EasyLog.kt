@@ -74,7 +74,7 @@ object EasyLog {
 
         if (isDebugMode) {
             logInternal(
-                logMessage ?: "default message",
+                logMessage ?: "EasyLog Default",
                 logObject::class.java.simpleName,
                 logData,
                 level,
@@ -85,8 +85,8 @@ object EasyLog {
     }
 
     private fun logInternal(logMessage: String, clazz: String, logObject: Any, level: LogType, fileName: String?, lineNumber: Int) {
-        val logInfo = "$clazz: $logObject"
-        val logTag = "$logTag: $logMessage ($fileName:$lineNumber)"
+        val logInfo = "$logMessage:: $logObject"
+        val logTag = "$logTag:: $clazz ($fileName:$lineNumber)"
         when (level) {
             LogType.DEBUG -> Log.d(logTag, logInfo)
             LogType.INFO -> Log.i(logTag, logInfo)
