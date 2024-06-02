@@ -40,7 +40,7 @@ afterEvaluate {
                 from(components["release"])
 
                 groupId = "com.mikeisesele"
-                artifactId = "easylogger"
+                artifactId = "easylog"
                 version = "2.1.0"
             }
         }

@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "EasyLog"
 include(":app")
-include(":easylogger")
+include(":easylog")
