@@ -42,8 +42,8 @@ object EasyLog {
      *                  Default value is "EASY-LOG".
      *
      * @param debugMode If set to true, logging will be enabled; if set to false, logging will be disabled.
-     *                  Debug mode is typically enabled in development or debug builds.
-     *                  Default value is false.
+     *                  Debug mode is typically enabled in development or debug builds. [BuildConfig.DEBUG]
+     *                  Default value is true.
      *
      * Example setup:
      *
