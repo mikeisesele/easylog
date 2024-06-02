@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -31,24 +31,26 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-}
 
-afterEvaluate {
     publishing {
-        publications {
-            create<MavenPublication>("mavenJava") {
-                from(components["release"])
-
-                groupId = "com.mikeisesele"
-                artifactId = "easylog"
-                version = "2.2.0"
+        publishing {
+            singleVariant("release") {
+                withSourcesJar()
+                withJavadocJar()
             }
         }
+    }
+}
 
-        repositories {
-            maven {
-                name = "jitpack"
-                url = uri("https://jitpack.io")
+publishing {
+    publications {
+        create("release", MavenPublication::class) {
+            groupId = "com.mikeisesele"
+            artifactId = "easylog"
+            version = "2.2.1"
+
+            afterEvaluate {
+                from(components["release"])
             }
         }
     }
