@@ -17,7 +17,7 @@ EasyLog is a lightweight logging utility for Android applications designed to si
 
 ## Installation
 
-To use EasyLog in your Android project, add the following dependency to your `build.gradle` file:
+1. To use EasyLog in your Android project, add the following dependency to your `build.gradle` file:
 
 ```groovy
 # Groovy
@@ -29,6 +29,17 @@ implementation 'com.github.mikeisesele:easylog:latestVersion'
 implementation("com.github.mikeisesele:easylog:latestVersion")
 ```
 
+2. Ensure you have JitPack configured in your settings.gradle file for dependency resolution:
+
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") } // Add this line  <==
+    }
+```
 
 ## Usage
 
@@ -42,6 +53,7 @@ implementation("com.github.mikeisesele:easylog:latestVersion")
         debugMode = BuildConfig.DEBUG // Ensure logs performs in debug mode only. [ BuildConfig.DEBUG returns false in release environment ]
     )
     ```
+}
 
 3. **Logging**:
 
