@@ -18,6 +18,8 @@ import android.util.Log
  *    - "World".logI("This is an info message") // This is an info message - World
  *    - 42.logE("This is an error message") // This is an error message - 42
  *    - SomeObject().logV("This is a verbose message") // This is a verbose message - SomeObject
+ *    - "Warning".logW("This is a warning message") // This is a warning message - Warning
+ *    - "WTF".logWtf("This should not happen") // This should not happen - WTF
  *
  * 4. Optionally, you can use default log messages:
  *    - "Another Message".log() // default message - Another Message
@@ -58,10 +60,18 @@ object EasyLog {
             LogType.INFO -> Log.i(logTag, logInfo)
             LogType.ERROR -> Log.e(logTag, logInfo)
             LogType.VERBOSE -> Log.v(logTag, logInfo)
+            LogType.WARNING -> Log.w(logTag, logInfo)
+            LogType.TERRIBLE_FAILURE -> Log.wtf(logTag, logInfo)
         }
     }
 }
 
+/**
+ * Logs a DEBUG message with optional custom log message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ *
+ * @param logMessage Optional message to log.
+ */
 fun Any.logD(logMessage: String? = null) {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
@@ -73,6 +83,12 @@ fun Any.logD(logMessage: String? = null) {
     )
 }
 
+/**
+ * Logs an INFO message with optional custom log message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ *
+ * @param logMessage Optional message to log.
+ */
 fun Any.logI(logMessage: String? = null) {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
@@ -80,10 +96,16 @@ fun Any.logI(logMessage: String? = null) {
         logObject = this,
         level = LogType.INFO,
         fileName = stackTraceElement.fileName,
-        lineNumber = stackTraceElement.lineNumber,
+        lineNumber = stackTraceElement.lineNumber
     )
 }
 
+/**
+ * Logs an ERROR message with optional custom log message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ *
+ * @param logMessage Optional message to log.
+ */
 fun Any.logE(logMessage: String? = null) {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
@@ -91,10 +113,16 @@ fun Any.logE(logMessage: String? = null) {
         logObject = this,
         level = LogType.ERROR,
         fileName = stackTraceElement.fileName,
-        lineNumber = stackTraceElement.lineNumber,
+        lineNumber = stackTraceElement.lineNumber
     )
 }
 
+/**
+ * Logs a VERBOSE message with optional custom log message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ *
+ * @param logMessage Optional message to log.
+ */
 fun Any.logV(logMessage: String? = null) {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
@@ -106,6 +134,44 @@ fun Any.logV(logMessage: String? = null) {
     )
 }
 
+/**
+ * Logs a WARNING message with optional custom log message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ *
+ * @param logMessage Optional message to log.
+ */
+fun Any.logW(logMessage: String? = null) {
+    val stackTraceElement = Throwable().stackTrace[1]
+    EasyLog.log(
+        logMessage = logMessage,
+        logObject = this,
+        level = LogType.WARNING,
+        fileName = stackTraceElement.fileName,
+        lineNumber = stackTraceElement.lineNumber
+    )
+}
+
+/**
+ * Logs a TERRIBLE FAILURE (WTF) message with optional custom log message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ *
+ * @param logMessage Optional message to log.
+ */
+fun Any.logWtf(logMessage: String? = null) {
+    val stackTraceElement = Throwable().stackTrace[1]
+    EasyLog.log(
+        logMessage = logMessage,
+        logObject = this,
+        level = LogType.TERRIBLE_FAILURE,
+        fileName = stackTraceElement.fileName,
+        lineNumber = stackTraceElement.lineNumber
+    )
+}
+
+/**
+ * Logs a DEBUG message without a custom message.
+ * Uses stack trace to capture the file name and line number where the log was called.
+ */
 fun Any.log() {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
@@ -117,10 +183,12 @@ fun Any.log() {
     )
 }
 
+
 enum class LogType {
     DEBUG,
     INFO,
     ERROR,
-    VERBOSE
+    VERBOSE,
+    WARNING,
+    TERRIBLE_FAILURE
 }
-
