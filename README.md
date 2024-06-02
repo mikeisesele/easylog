@@ -49,7 +49,7 @@ dependencyResolutionManagement {
 
     ```kotlin
     EasyLog.setup(
-        filterTag = "CustomTag", // Optional filter tag for log messages
+        filterTag = "CustomTag", // Optional filter tag for log messages. Defaults to EASY-LOG
         debugMode = BuildConfig.DEBUG // Ensure logs performs in debug mode only. [ BuildConfig.DEBUG returns false in release environment ]
     )
     ```
