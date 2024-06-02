@@ -21,29 +21,42 @@
 #-renamesourcefileattribute SourceFile
 
 # Retain public API methods
-#-keepclassmembers class com.michael.easylog.** {
-#    public void logD(java.lang.String);
-#    public void logI(java.lang.String);
-#    public void logE(java.lang.String);
-#    public void logV(java.lang.String);
-#    public void log();
-#    public static void setup(java.lang.String);
-#}
-#
-## Retain LogType enum and its members
-#-keepclassmembers enum com.michael.easylog.LogType {
-#    *;
-#}
-#
-## Keep specific methods and fields in LogType enum
-#-keepclassmembers class com.michael.easylog.LogType {
-#    public *;
-#}
-#
-### Keep internal implementation classes
-##-keep class com.michael.easylog.internal.** { *; }
-#
-## Keep Parcelable implementation with CREATOR field
-#-keepclasseswithmembers class * implements android.os.Parcelable {
-#    public static final android.os.Parcelable$Creator CREATOR;
-#}
+-keepclassmembers class com.michael.easylog.** {
+    public void logD(java.lang.String);
+    public void logI(java.lang.String);
+    public void logE(java.lang.String);
+    public void logV(java.lang.String);
+    public void log();
+    public static *** logW(...);
+    public static *** logWtf(...);
+    public static void setup(java.lang.String);
+}
+
+# Retain LogType enum and its members
+-keepclassmembers enum com.michael.easylog.LogType {
+    *;
+}
+
+# Keep specific methods and fields in LogType enum
+-keepclassmembers class com.michael.easylog.LogType {
+    public *;
+}
+
+## Keep internal implementation classes
+#-keep class com.michael.easylog.internal.** { *; }
+
+# Keep Parcelable implementation with CREATOR field
+-keepclasseswithmembers class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator CREATOR;
+}
+
+# Remove logging statements in release build
+-assumenosideeffects class com.michael.easylog.EasyLogKt {
+    public static *** logD(...);
+    public static *** logI(...);
+    public static *** logE(...);
+    public static *** logV(...);
+    public static *** log(...);
+    public static *** logW(...);
+    public static *** logWtf(...);
+}

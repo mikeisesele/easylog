@@ -32,9 +32,31 @@ object EasyLog {
     private const val IDENTIFIER = "EASY-LOG"
     private var logTag: String = IDENTIFIER
     private var logLevel: LogType = LogType.DEBUG
+    private var isDebugMode: Boolean = true
 
-    fun setup(filterTag: String) {
+
+    /**
+     * Sets up the EasyLog utility with the specified filter tag and debug mode.
+     *
+     * @param filterTag The filter tag is a custom, optional tag to be used in log messages for easy filtering.
+     *                  Default value is "EASY-LOG".
+     *
+     * @param debugMode If set to true, logging will be enabled; if set to false, logging will be disabled.
+     *                  Debug mode is typically enabled in development or debug builds.
+     *                  Default value is false.
+     *
+     * Example setup:
+     *
+     * ```
+     * EasyLog.setup(
+     *     filterTag = "CUSTOM TAG",
+     *     debugMode = BuildConfig.DEBUG
+     * )
+     * ```
+     */
+    fun setUp(filterTag: String, debugMode: Boolean) {
         logTag = filterTag
+        isDebugMode = debugMode
     }
 
     internal fun log(
@@ -49,7 +71,17 @@ object EasyLog {
         } catch (e: Exception) {
             "Error converting data to string: ${e.message}"
         }
-        logInternal(logMessage ?: "default message", logObject::class.java.simpleName, logData, level, fileName, lineNumber)
+
+        if (isDebugMode) {
+            logInternal(
+                logMessage ?: "default message",
+                logObject::class.java.simpleName,
+                logData,
+                level,
+                fileName,
+                lineNumber
+            )
+        }
     }
 
     private fun logInternal(logMessage: String, clazz: String, logObject: Any, level: LogType, fileName: String?, lineNumber: Int) {

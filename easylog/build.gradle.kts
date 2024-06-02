@@ -47,7 +47,7 @@ publishing {
         create("release", MavenPublication::class) {
             groupId = "com.mikeisesele"
             artifactId = "easylog"
-            version = "2.2.2"
+            version = "2.2.3"
 
             afterEvaluate {
                 from(components["release"])
