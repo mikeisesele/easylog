@@ -48,6 +48,10 @@ dependencyResolutionManagement {
 2. **Initialization**: Initialize the logger during your application's initialization phase with optional configurations:
 
     ```kotlin
+
+    // This setup can be done in your Application class or BaseAvtivty if you have one. 
+    // Otherwise, the MainActivity works just fine.
+
     EasyLog.setup(
         filterTag = "CustomTag", // Optional filter tag for log messages. Defaults to EASY-LOG
         debugMode = BuildConfig.DEBUG // Ensure logs performs in debug mode only. [ BuildConfig.DEBUG returns false in release environment ]
