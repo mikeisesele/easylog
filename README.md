@@ -56,6 +56,11 @@ dependencyResolutionManagement {
         filterTag = "CustomTag", // Optional filter tag for log messages. Defaults to EASY-LOG
         debugMode = BuildConfig.DEBUG // Ensure logs performs in debug mode only. [ BuildConfig.DEBUG returns false in release environment ]
     )
+
+    // NOTE: Internally, debugMode is true by default. to prevent logging on production, do not manually set this to true.
+    // rather use BuildConfig.DEBUG as the parameter, 
+    // or better still use environment variables with BuildVariants.
+
     ```
 }
 
