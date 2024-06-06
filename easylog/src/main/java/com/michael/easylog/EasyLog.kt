@@ -34,7 +34,6 @@ object EasyLog {
     private var logLevel: LogType = LogType.DEBUG
     private var isDebugMode: Boolean = true
 
-
     /**
      * Sets up the EasyLog utility with the specified filter tag and debug mode.
      *
@@ -214,7 +213,6 @@ fun Any.log() {
         lineNumber = stackTraceElement.lineNumber
     )
 }
-
 
 enum class LogType {
     DEBUG,
