@@ -39,6 +39,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven { url = uri("https://jitpack.io") } // Add this line  <==
     }
+}
 ```
 
 ## Usage
@@ -62,7 +63,6 @@ dependencyResolutionManagement {
     // or better still use environment variables with BuildVariants.
 
     ```
-}
 
 3. **Logging**:
 
@@ -83,6 +83,15 @@ dependencyResolutionManagement {
 
    ```kotlin
    "Another Message".log() // EASY-LOG: Another Message
+
+   val myNullableObject: MyClass? = getNullableObject()
+   //  log message is optional to pass [ myNullableObject.logWithReturnNullable("your message here") ]
+   myNullableObject.logWithReturnNullable()
+
+   val myObject: MyClass = getNonNullableObject()
+   //  log message is optional to pass [ myNullableObject.logWithReturnNonNullable("your message here") ]
+    myObject.logWithReturnNonNullable() //  log message is optional to pass
+
    ```
 
 ### More Logging Examples
@@ -152,6 +161,9 @@ Sets up the EasyLog utility with the specified filter tag and debug mode.
 - `logW(logMessage: String?)`: Logs a WARNING message with an optional custom log message.
 - `logWtf(logMessage: String?)`: Logs a TERRIBLE FAILURE (WTF) message with an optional custom log message.
 - `log()`: Logs a DEBUG message without a custom message.
+- `logWithoutReturn()`: Logs a DEBUG message without a custom message and does not return the object.
+- `logWithReturnNullable()`: Logs a DEBUG message if the calling object is not null and returns the object itself.
+- `logWithReturnNonNullable()`: Logs a DEBUG message and returns the object itself.
 
 ### `LogType` Enum
 
