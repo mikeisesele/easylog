@@ -231,7 +231,7 @@ fun Any.log() {
  * myNullableObject.logWithReturnNullable()
  * ```
  */
-fun <T : Any> T?.logWithReturnNullable(logMessage: String?): T? {
+fun <T : Any> T?.logWithNullableReturn(logMessage: String? = null): T? {
     val stackTraceElement = Throwable().stackTrace[1]
     this?.let {
         EasyLog.log(
@@ -262,7 +262,7 @@ fun <T : Any> T?.logWithReturnNullable(logMessage: String?): T? {
  * myObject.logWithReturnNonNullable()
  * ```
  */
-fun <T : Any> T.logWithReturnNonNullable(logMessage: String?): T {
+fun <T : Any> T.logWithNonNullableReturn(logMessage: String? = null): T {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
         logMessage = logMessage,
