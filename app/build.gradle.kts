@@ -69,6 +69,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.github.mikeisesele:easylog:1.1.0")
+    implementation("com.github.mikeisesele:easylog:2.5.0")
 
 }

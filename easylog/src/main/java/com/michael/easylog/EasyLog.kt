@@ -214,6 +214,67 @@ fun Any.log() {
     )
 }
 
+/**
+ * Logs a DEBUG message if the calling object is not null and returns the object itself.
+ *
+ * @param None
+ * @return T? - The original object, which can be null.
+ *
+ * This extension function can be called on any nullable object.
+ * It logs a DEBUG message using the `EasyLog` logging utility, capturing the file name
+ * and line number where the log was called. If the object is null, it skips logging.
+ * This function is useful for logging and returning nullable objects in a fluent style.
+ *
+ * Example:
+ * ```
+ * val myNullableObject: MyClass? = getNullableObject()
+ * myNullableObject.logWithReturnNullable()
+ * ```
+ */
+fun <T : Any> T?.logWithReturnNullable(logMessage: String?): T? {
+    val stackTraceElement = Throwable().stackTrace[1]
+    this?.let {
+        EasyLog.log(
+            logMessage = logMessage,
+            logObject = it,
+            level = LogType.DEBUG,
+            fileName = stackTraceElement.fileName,
+            lineNumber = stackTraceElement.lineNumber
+        )
+    }
+    return this
+}
+
+/**
+ * Logs a DEBUG message and returns the object itself.
+ *
+ * @param None
+ * @return T - The original object, which is guaranteed to be non-null.
+ *
+ * This extension function can be called on any non-nullable object.
+ * It logs a DEBUG message using the `EasyLog` logging utility, capturing the file name
+ * and line number where the log was called. This function is useful for logging and returning
+ * non-nullable objects in a fluent style.
+ *
+ * Example:
+ * ```
+ * val myObject: MyClass = getNonNullableObject()
+ * myObject.logWithReturnNonNullable()
+ * ```
+ */
+fun <T : Any> T.logWithReturnNonNullable(logMessage: String?): T {
+    val stackTraceElement = Throwable().stackTrace[1]
+    EasyLog.log(
+        logMessage = logMessage,
+        logObject = this,
+        level = LogType.DEBUG,
+        fileName = stackTraceElement.fileName,
+        lineNumber = stackTraceElement.lineNumber
+    )
+    return this
+}
+
+
 enum class LogType {
     DEBUG,
     INFO,
