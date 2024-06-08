@@ -85,13 +85,20 @@ dependencyResolutionManagement {
    "Another Message".log() // EASY-LOG: Another Message
 
    val myNullableObject: MyClass? = getNullableObject()
-   //  log message is optional to pass [ myNullableObject.logWithReturnNullable("your message here") ]
-   myNullableObject.logWithReturnNullable()
+   myNullableObject.logInline()
+
+   // logInline the values of savedInstanceState [nullable]
+     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState.logInline()) Logs Inline  <==
+   }
 
    val myObject: MyClass = getNonNullableObject()
-   //  log message is optional to pass [ myNullableObject.logWithReturnNonNullable("your message here") ]
-    myObject.logWithReturnNonNullable() //  log message is optional to pass
+    myObject.logInline() //  log message is optional to pass
 
+    // log the value of contact screen state [non-nullable]
+   ExampleScreen(
+        viewModelState = state.logInline(),  Logs Inline  <==
+    )
    ```
 
 ### More Logging Examples
@@ -160,10 +167,8 @@ Sets up the EasyLog utility with the specified filter tag and debug mode.
 - `logV(logMessage: String?)`: Logs a VERBOSE message with an optional custom log message.
 - `logW(logMessage: String?)`: Logs a WARNING message with an optional custom log message.
 - `logWtf(logMessage: String?)`: Logs a TERRIBLE FAILURE (WTF) message with an optional custom log message.
-- `log()`: Logs a DEBUG message without a custom message.
-- `logWithoutReturn()`: Logs a DEBUG message without a custom message and does not return the object.
-- `logWithReturnNullable()`: Logs a DEBUG message if the calling object is not null and returns the object itself.
-- `logWithReturnNonNullable()`: Logs a DEBUG message and returns the object itself.
+- `log()`: Logs a DEBUG message without a custom message and does not return the object.
+- `logInline()`: Logs a DEBUG message if the calling object is not null and returns the object. if its null then a notifying message is logged
 
 ### `LogType` Enum
 
