@@ -221,22 +221,29 @@ fun Any.log() {
  * @return T? - The original object, which can be null.
  *
  * This extension function can be called on any nullable object.
- * It logs a DEBUG message using the `EasyLog` logging utility, capturing the file name
- * and line number where the log was called. If the object is null, it skips logging.
+ * If the object is null, it skips logging.
  * This function is useful for logging and returning nullable objects in a fluent style.
  *
  * Example:
  * ```
  * val myNullableObject: MyClass? = getNullableObject()
- * myNullableObject.logWithReturnNullable()
+ * myNullableObject.log()
  * ```
  */
-fun <T : Any> T?.logWithNullableReturn(logMessage: String? = null): T? {
+fun <T : Any> T?.logInline(logMessage: String? = null): T? {
     val stackTraceElement = Throwable().stackTrace[1]
     this?.let {
         EasyLog.log(
             logMessage = logMessage,
             logObject = it,
+            level = LogType.DEBUG,
+            fileName = stackTraceElement.fileName,
+            lineNumber = stackTraceElement.lineNumber
+        )
+    } ?: run {
+        EasyLog.log(
+            logMessage = "Object at ${stackTraceElement.fileName + ":" + stackTraceElement.lineNumber} is null",
+            logObject = "Null",
             level = LogType.DEBUG,
             fileName = stackTraceElement.fileName,
             lineNumber = stackTraceElement.lineNumber
@@ -250,19 +257,15 @@ fun <T : Any> T?.logWithNullableReturn(logMessage: String? = null): T? {
  *
  * @param None
  * @return T - The original object, which is guaranteed to be non-null.
- *
- * This extension function can be called on any non-nullable object.
- * It logs a DEBUG message using the `EasyLog` logging utility, capturing the file name
- * and line number where the log was called. This function is useful for logging and returning
- * non-nullable objects in a fluent style.
+ *This function is useful for logging and returning non-nullable objects in a fluent style.
  *
  * Example:
  * ```
  * val myObject: MyClass = getNonNullableObject()
- * myObject.logWithReturnNonNullable()
+ * myObject.logInline()
  * ```
  */
-fun <T : Any> T.logWithNonNullableReturn(logMessage: String? = null): T {
+fun <T : Any> T.logInline(logMessage: String? = null): T {
     val stackTraceElement = Throwable().stackTrace[1]
     EasyLog.log(
         logMessage = logMessage,
