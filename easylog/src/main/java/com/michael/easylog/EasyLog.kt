@@ -227,10 +227,10 @@ fun Any.log() {
  * Example:
  * ```
  * val myNullableObject: MyClass? = getNullableObject()
- * myNullableObject.log()
+ * myNullableObject.logInlineNullable()
  * ```
  */
-fun <T : Any> T?.logInline(logMessage: String? = null): T? {
+fun <T : Any> T?.logInlineNullable(logMessage: String? = null): T? {
     val stackTraceElement = Throwable().stackTrace[1]
     this?.let {
         EasyLog.log(
