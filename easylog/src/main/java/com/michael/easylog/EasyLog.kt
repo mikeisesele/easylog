@@ -6,8 +6,6 @@ import com.michael.easylog.defaultloggers.BugFenderLogger
 import com.michael.easylog.defaultloggers.DefaultAndroidLogger
 import com.michael.easylog.defaultloggers.FileLogger
 import com.michael.easylog.defaultloggers.TimberLogger
-import com.michael.easylog.domain.DefaultLogger
-import com.michael.easylog.domain.Logger
 
 /**
  * EasyLog - A simple logging utility for Android applications.

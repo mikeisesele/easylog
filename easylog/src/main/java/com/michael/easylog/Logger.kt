@@ -1,4 +1,4 @@
-package com.michael.easylog.domain
+package com.michael.easylog
 
 import com.michael.easylog.LogType
 

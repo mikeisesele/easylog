@@ -1,4 +1,4 @@
-package com.michael.easylog.domain
+package com.michael.easylog
 
 enum class DefaultLogger {
     BUFFER_CHUNKING,

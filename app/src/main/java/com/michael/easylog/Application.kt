@@ -1,7 +1,6 @@
 package com.michael.easylog
 
 import android.app.Application
-import com.michael.easylog.domain.DefaultLogger
 
 class App : Application() {
     override fun onCreate() {
