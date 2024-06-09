@@ -19,7 +19,6 @@ class App : Application() {
             debugMode(BuildConfig.DEBUG)
             defaultLogger(DefaultLogger.DEFAULT_ANDROID)
             filterTag ("Rigel")
-            build()
         }
     }
 }
