@@ -313,10 +313,10 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
-          // Add Timber, Bugfender or any logging mechanism you want to work with in your custom implementation
+        // Add Timber, Bugfender or any custom logging mechanism based on your project needs
 
 
-        // set up easylog to use Timber
+        // set up easylog to use Custom logger
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
