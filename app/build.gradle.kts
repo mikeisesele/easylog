@@ -1,7 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
+
+//// Read properties file and extract the API key
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
+
+// Access the API key
+val bugfenderApiKey: String = properties.getProperty("BUGFENDER_API_KEY")
 
 android {
     namespace = "com.michael.easylog"
@@ -28,6 +37,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -47,7 +59,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
+
 
 dependencies {
 

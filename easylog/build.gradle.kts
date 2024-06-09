@@ -63,6 +63,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    api("com.bugfender.sdk:android:3.2.0")
+    api("com.jakewharton.timber:timber:5.0.1")
 }
 
 
