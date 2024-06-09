@@ -10,7 +10,7 @@ val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
 // Access the API key
-val bugfenderApiKey: String = properties.getProperty("BUGFENDER_API_KEY")
+val bugfenderApiKey: String = properties.getOrDefault("BUGFENDER_API_KEY", "FiJ1HhYTIFRADFADNVDIVHD").toString()
 
 android {
     namespace = "com.michael.easylog"

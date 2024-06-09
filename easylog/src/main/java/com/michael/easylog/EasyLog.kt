@@ -6,6 +6,8 @@ import com.michael.easylog.defaultloggers.BugFenderLogger
 import com.michael.easylog.defaultloggers.DefaultAndroidLogger
 import com.michael.easylog.defaultloggers.FileLogger
 import com.michael.easylog.defaultloggers.TimberLogger
+import com.michael.easylog.domain.DefaultLogger
+import com.michael.easylog.domain.Logger
 
 /**
  * EasyLog - A simple logging utility for Android applications.
@@ -139,14 +141,20 @@ object EasyLog {
 
 
     internal fun log(
-        logMessage: String? = "Logged Data",
+        logMessage: String?,
         logObject: Any,
         level: LogType = logLevel,
         fileName: String?,
         lineNumber: Int
     ) {
         if (isDebugMode) {
-            logger.log(logMessage, logObject, level, fileName, lineNumber)
+            logger.log(
+                logMessage = logMessage.ifNullSetDefault { "Logged Data" },
+                logObject = logObject,
+                level = level,
+                fileName = fileName,
+                lineNumber = lineNumber
+            )
         }
     }
 }
