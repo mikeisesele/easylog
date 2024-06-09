@@ -6,11 +6,11 @@ plugins {
 }
 
 //// Read properties file and extract the API key
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
+//val properties = Properties()
+//properties.load(project.rootProject.file("local.properties").inputStream())
 
 // Access the API key
-val bugfenderApiKey: String = properties.getOrDefault("BUGFENDER_API_KEY", "FiJ1HhYTIFRADFADNVDIVHD").toString()
+//val bugfenderApiKey: String = properties.getProperty("BUGFENDER_API_KEY")
 
 android {
     namespace = "com.michael.easylog"
@@ -37,9 +37,9 @@ android {
                 "proguard-rules.pro"
             )
         }
-        getByName("debug") {
-            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
-        }
+//        getByName("debug") {
+//            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
