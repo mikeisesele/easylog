@@ -1,12 +1,16 @@
 package com.michael.easylog
 
-import android.util.Log
+import android.content.Context
+import com.michael.easylog.defaultloggers.BufferChunkingLogger
+import com.michael.easylog.defaultloggers.BugFenderLogger
+import com.michael.easylog.defaultloggers.DefaultAndroidLogger
+import com.michael.easylog.defaultloggers.FileLogger
+import com.michael.easylog.defaultloggers.TimberLogger
 
 /**
  * EasyLog - A simple logging utility for Android applications.
  *
  * Usage:
- * 1. To see logs in the logcat, add the following to gradle.properties:
  *
  *
  * 2. Initialize the logger in your application's initialization phase:
@@ -28,71 +32,121 @@ import android.util.Log
  * - Log messages are only displayed in debug mode.
  * - Default log level is DEBUG, which can be changed during setup.
  */
+
 object EasyLog {
     private const val IDENTIFIER = "EASY-LOG"
-    private var logTag: String = IDENTIFIER
+    var logTag: String = IDENTIFIER
     private var logLevel: LogType = LogType.DEBUG
     private var isDebugMode: Boolean = true
+    private lateinit var logger: Logger
 
-    /**
-     * Sets up the EasyLog utility with the specified filter tag and debug mode.
-     *
-     * @param filterTag The filter tag is a custom, optional tag to be used in log messages for easy filtering.
-     *                  Default value is "EASY-LOG".
-     *
-     * @param debugMode If set to true, logging will be enabled; if set to false, logging will be disabled.
-     *                  Debug mode is typically enabled in development or debug builds. [BuildConfig.DEBUG]
-     *                  Default value is true.
-     *
-     * Example setup:
-     *
-     * ```
-     * EasyLog.setup(
-     *     filterTag = "CUSTOM TAG",
-     *     debugMode = BuildConfig.DEBUG
-     * )
-     * ```
-     */
-    fun setUp(filterTag: String, debugMode: Boolean) {
-        logTag = filterTag
-        isDebugMode = debugMode
+    // Builder for EasyLog configuration
+    class Builder {
+
+        private var filterTag: String = IDENTIFIER
+        private var debugMode: Boolean = isDebugMode
+        private var defaultLogger: DefaultLogger? = null
+        private var customLogger: Logger? = null
+        private var context: Context? = null
+
+        /**
+         * Sets the custom filter tag to be used in log messages.
+         * This tag helps in filtering log messages for easier debugging and identification.
+         *
+         * @param filterTag The custom filter tag to be applied to log messages.
+         * default filter tag is "EASY-LOG"
+         */
+        fun filterTag(filterTag: String) = apply { this.filterTag = filterTag }
+
+        /**
+         * Sets the debug mode for logging.
+         * When debug mode is enabled, logging is performed; otherwise, logging is disabled.
+         *
+         * @param debugMode Boolean value indicating whether logging should be enabled in debug mode.
+         * set the below in your app build.gradle file, inside the android block
+         *   buildFeatures {
+         *      buildConfig = true
+         *   }
+         *
+         *   then pass in BuildConfig.DEBUG as a parameter
+         */
+        fun debugMode(debugMode: Boolean) = apply { this.debugMode = debugMode }
+
+        /**
+         * Sets the default logger to be used for logging.
+         * The default logger is used if no custom logger is specified.
+         *
+         * @param defaultLogger The default logger to be used for logging.
+         *
+         * Possible values for defaultLogger:
+         *
+         * - `DefaultLogger.DEFAULT_ANDROID`: Logs the log messages using the default Android logger.
+         * - `DefaultLogger.FILE_LOGGER`: Logs the log messages to a file in the app's cache directory.
+         * - `DefaultLogger.TIMBER`: Logs the log messages using the Timber library.
+         * - `DefaultLogger.BUFFER_CHUNKING`: Chunks the log messages into smaller pieces.
+         * - `DefaultLogger.BUG_FENDER`: Logs the error messages using BugFender's remote server.
+         *
+         */
+        fun defaultLogger(defaultLogger: DefaultLogger?) = apply { this.defaultLogger = defaultLogger }
+
+        /**
+         * Sets the custom logger to be used for logging.
+         * If a custom logger is specified, it takes precedence over the default logger.
+         *
+         * @param customLogger The custom logger to be used for logging.
+         *
+         * Use a custom logger when you need specific logging behavior tailored to your application's needs.
+         * For example, you may want to implement a custom logger that logs messages to a remote server
+         * or formats log messages in a specific way.
+         *
+         * provide a custom logger class extending the Logger interface adn override the log method.
+         */
+        fun customLogger(customLogger: Logger?) = apply { this.customLogger = customLogger }
+
+        /**
+         * Sets the context to be used for logging.
+         * This context is only required for File logging.
+         *
+         * @param context The context to be used for logging, if applicable.
+         */
+        fun context(context: Context?) = apply { this.context = context }
+
+
+        fun build() {
+            logTag = filterTag
+            isDebugMode = debugMode
+            logger = when {
+                customLogger != null -> customLogger!!
+                defaultLogger != null -> createLogger(defaultLogger!!, context)
+                else -> DefaultAndroidLogger() // Fallback to default logger
+            }
+        }
     }
 
+    fun setUp(builder: Builder.() -> Unit) {
+        Builder().apply(builder).build()
+    }
+
+    private fun createLogger(defaultLogger: DefaultLogger, context: Context?): Logger {
+            return when (defaultLogger) {
+                DefaultLogger.BUFFER_CHUNKING -> BufferChunkingLogger()
+                DefaultLogger.BUG_FENDER -> BugFenderLogger()
+                DefaultLogger.DEFAULT_ANDROID -> DefaultAndroidLogger()
+                DefaultLogger.FILE_LOGGER -> FileLogger(context!!)
+                DefaultLogger.TIMBER -> TimberLogger()
+        }
+    }
+
+
     internal fun log(
-        logMessage: String? = null,
+        logMessage: String? = "Logged Data",
         logObject: Any,
         level: LogType = logLevel,
         fileName: String?,
         lineNumber: Int
     ) {
-        val logData = try {
-            logObject.toString()
-        } catch (e: Exception) {
-            "Error converting data to string: ${e.message}"
-        }
-
         if (isDebugMode) {
-            logInternal(
-                logMessage ?: "EasyLog Default",
-                logObject::class.java.simpleName,
-                logData,
-                level,
-                fileName,
-                lineNumber
-            )
-        }
-    }
-
-    private fun logInternal(logMessage: String, clazz: String, logObject: Any, level: LogType, fileName: String?, lineNumber: Int) {
-        val logInfo = "$logMessage:: $logObject"
-        val logTag = "$logTag:: $clazz ($fileName:$lineNumber)"
-        when (level) {
-            LogType.DEBUG -> Log.d(logTag, logInfo)
-            LogType.INFO -> Log.i(logTag, logInfo)
-            LogType.ERROR -> Log.e(logTag, logInfo)
-            LogType.VERBOSE -> Log.v(logTag, logInfo)
-            LogType.WARNING -> Log.w(logTag, logInfo)
-            LogType.TERRIBLE_FAILURE -> Log.wtf(logTag, logInfo)
+            logger.log(logMessage, logObject, level, fileName, lineNumber)
         }
     }
 }
@@ -257,13 +311,8 @@ fun <T : Any> T?.logInlineNullable(logMessage: String? = null): T? {
  *
  * @param None
  * @return T - The original object, which is guaranteed to be non-null.
- *This function is useful for logging and returning non-nullable objects in a fluent style.
+ * This function is useful for logging and returning non-nullable objects in a fluent style.
  *
- * Example:
- * ```
- * val myObject: MyClass = getNonNullableObject()
- * myObject.logInline()
- * ```
  */
 fun <T : Any> T.logInline(logMessage: String? = null): T {
     val stackTraceElement = Throwable().stackTrace[1]
