@@ -1,44 +1,19 @@
 # EasyLog
 
-
-EasyLog is a lightweight, simple, and flexible logging utility for Android applications. It provides a concise syntax for logging messages directly from objects. It supports various default and custom loggers such as Timber, BugFender, File logging, and Custom Logging Implementations based on your needs.
-
+EasyLog is a lightweight, simple, and flexible logging utility for Android applications. It provides a concise syntax for logging messages directly from objects and supports various default and custom loggers.
 
 ## Features
 
-EasyLog offers:
-
-1. **Custom Configuration**: Tailor logging behavior with ease during setup.
-  
-2. **Multiple Logging Levels**: Log messages at various levels of severity, including DEBUG, INFO, ERROR, VERBOSE, WARNING, and TERRIBLE_FAILURE.
-
-3. **Simplified Syntax**: Log messages directly from objects with concise methods, enhancing readability.
-
-4. **Default Log Messages**: Quickly log messages without specifying a custom message.
-
-5. **Automatic Contextual Information**: Capture class and line number information automatically for each log call, aiding in debugging.
-
-6. **Debug Mode Logging**: Log messages are displayed only in debug mode, ensuring optimal performance in production environments.
-
-7. **Seamless Integration**: Easily integrate with popular logging libraries like Timber and Bugfender.
-
-8. **Efficient Performance**: Lightweight and efficient design minimizes impact on application performance.
-
-9. **Advanced Logging Capabilities**: Log on nullable and non-nullable objects and return the logged data for continued system processing.
-
-10. **Integration with Custom Logging Implementations**: Set up custom logging implementations to suit your specific requirements.
-
-11. **Support for Logging to File**: Log messages to a file for storage and future reference.
-
-12. **Support for Buffer Chunking**: Log messages in chunks for improved performance and management.
-
-13. **Integration with Bugfender**: Seamlessly integrate with Bugfender for remote logging and centralized log management.
-
-14. **Integration with Timber**: Integrate with Timber, a logging library for Android, for additional logging features and functionality.
-
-15. **Integration with Other Logging Libraries**: Easily integrate with other logging libraries as per project requirements.
-
-
+- **Custom Configuration**: Easy setup for tailored logging behavior.
+- **Multiple Logging Levels**: DEBUG, INFO, ERROR, VERBOSE, WARNING, TERRIBLE_FAILURE.
+- **Simplified Syntax**: Log directly from objects.
+- **Automatic Contextual Info**: Captures class and line number.
+- **Debug Mode Logging**: Only logs in debug mode.
+- **Seamless Integration**: Works with Timber, Bugfender, and more.
+- **Efficient Performance**: Minimal impact on performance.
+- **Advanced Capabilities**: Log nullable/non-nullable objects and return logged data.
+- **File Logging**: Log messages to a file.
+- **Buffer Chunking**: Log messages in chunks for efficiency.
 
 ## Installation
 
@@ -54,7 +29,7 @@ implementation 'com.github.mikeisesele:easylog:latestVersion'
 implementation("com.github.mikeisesele:easylog:latestVersion")
 ```
 
-2. Ensure you have JitPack configured in your settings.gradle file for dependency resolution:
+2. Configure Jitpack in your settings.gradle file
 
 ```kotlin
 dependencyResolutionManagement {
@@ -69,13 +44,9 @@ dependencyResolutionManagement {
 
 ## Usage
 
-1. **Enable Debugging**: Ensure your application is in debug mode to view logs in the logcat.
+1. **Enable Debugging**: Ensure your application is in debug mode.
 
-2. **Initialization**: Initialize the logger during your application's initialization phase with optional configurations:
-
-    ```kotlin
-    // EasyLog set up uses the builder pattern and this setup can be done in your Application class or BaseAvtivty if you have one. 
-    // Otherwise, the MainActivity works just fine.
+2. **Initialization**: Initialization: Initialize in your Application class, BaseActivity or MainActivity:
 
    ```kotlin
     EasyLog.setUp {
@@ -115,78 +86,52 @@ dependencyResolutionManagement {
 
     ```
 
-3. **Logging**:
+3. **Default Logging**: Log messages using concise syntax directly on objects:
 
-   Log messages using concise syntax directly on objects:
+ ```kotlin
+    123.logD("Integer: ")        
+    123.0.logI("Double: ")
+    "John".logE("String: ")
+    true.logV("Boolean: ")
+    "Default Log".log()
+  ```
 
-       ```kotlin
-        // Log integer value
-        123.logD("Integer: ")
-        
-        // Log double value
-        123.0.logD("Double: ")
-        
-        // Log string value
-        "John".logD("String: ")
-        
-        // Log boolean value
-        true.logD("Boolean: ")
-        
-        // Log without any arguments
-        "Default Log".log()
-        ```
+  ```kotlin
+  2024-06-01 12:03:53.325 27193 CustomTag: Integer: 123 (MainActivity.kt:77) // assuming the log was called from MainActivity line 77
+  2024-06-01 12:03:53.325 27193 CustomTag: Double: 123.0 (MainViewModel.kt:78) // assuming the log was called from MainViewModel line 78
+  2024-06-01 12:03:53.325 27193 CustomTag: String: John (MainRepository.kt:79) // assuming the log was called from MainRepository line 79
+  2024-06-01 12:03:53.326 27193 CustomTag: Boolean: true (HomeScreenComposable.kt:80) // assuming the log was called from HomeScreenComposable line 80
+  2024-06-01 12:03:53.326 27193 CustomTag: String: Default Log (HomeScreenComposable.kt:12) // assuming the log was called from HomeScreenComposable line 12
+  
+  // each source i.e. (MainActivity.kt:77) for example... are clickable.
+  ```
 
-EasyLog provides concise methods for logging messages at different levels of severity. 
-Log messages are automatically formatted for easy readability in Logcat, 
-including the class and line number of the log call site and the data type of the logged object.
+4. **Inline Logging**: Log on nullable and non-nullable objects and return the logged data for continued system processing
 
+  ```kotlin
 
-```kotlin
-2024-06-01 12:03:53.325 27193 CustomTag: Integer: 123 (MainActivity.kt:77) // assuming the log was called from MainActivity line 77
-2024-06-01 12:03:53.325 27193 CustomTag: Double: 123.0 (MainViewModel.kt:78) // assuming the log was called from MainViewModel line 78
-2024-06-01 12:03:53.325 27193 CustomTag: String: John (MainRepository.kt:79) // assuming the log was called from MainRepository line 79
-2024-06-01 12:03:53.326 27193 CustomTag: Boolean: true (HomeScreenComposable.kt:80) // assuming the log was called from HomeScreenComposable line 80
-2024-06-01 12:03:53.326 27193 CustomTag: String: Default Log (HomeScreenComposable.kt:12) // assuming the log was called from HomeScreenComposable line 12
+     val myNullableObject: MyClass? = getNullableObject()
+     myNullableObject.logNullableInline()
 
-// each source i.e. (MainActivity.kt:77) for example... are clickable.
-```
-
-5. **Default Logging**:
-
-   Optionally, you can use default log messages:
-
-   ```kotlin
-   "Another Message".log() // EASY-LOG: Another Message
-   ```
-
-6. **Advanced Logging**:
-
-    log on nullable and non nullable objects and return the logged data for continued system processing
-
-    ```kotlin
-
-       val myNullableObject: MyClass? = getNullableObject()
-       myNullableObject.logInline()
-
-       // logInline the values of savedInstanceState [nullable]
-         override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState.logInline()) Logs Inline  <==
-       }
-    
-       val myObject: MyClass = getNonNullableObject()
-        myObject.logInline() //  log message is optional to pass
-    
-        // log the value of contact screen state [non-nullable]
-       ExampleScreen(
-            viewModelState = state.logInline(),  Logs Inline  <==
-        )
-   ```
+     // logInline the values of savedInstanceState [nullable]
+       override fun onCreate(savedInstanceState: Bundle?) {
+          super.onCreate(savedInstanceState.logNullableInline()) Logs Inline  <==
+     }
+  
+     val myObject: MyClass = getNonNullableObject()
+      myObject.logInline() //  log message is optional to pass
+  
+      // log the value of contact screen state [non-nullable]
+     ExampleScreen(
+          viewModelState = state.logInline(),  Logs Inline  <==
+      )
+ ```
 
 ### Configuration
 
 - Default Loggers
 
-EasyLog supports several default loggers. Choose one as an argument in defaultLogger() during setup:
+EasyLog supports several default loggers. Choose any as an argument in defaultLogger() during setup:
 
     BUFFER_CHUNKING - Logs messages in chunks.
     BUG_FENDER - Logs messages to BugFender.
@@ -200,11 +145,7 @@ EasyLog supports several default loggers. Choose one as an argument in defaultLo
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
-
-        // Set up Timber in your Application class [ or BaseActivity ]
         Timber.plant(Timber.DebugTree())
-
-        // set up easylog to use Timber
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
@@ -218,19 +159,14 @@ class App: Application() {
 ## Set up Remote Logging with Bugfender
 
 ```kotlin
-
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
-
-        // Set up Timber in your Application class [ or BaseActivity ]
         // Get your BUGFENDER_API_KEY. at https://bugfender.com/
         Bugfender.init(this, BUGFENDER_API_KEY, BuildConfig.DEBUG, true)
         Bugfender.enableUIEventLogging(this)
         Bugfender.enableLogcatLogging()
 
-
-        // set up easylog to use Timber
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
@@ -255,8 +191,6 @@ class App: Application() {
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
-
-        // set up easylog to use Timber
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
@@ -271,8 +205,6 @@ class App: Application() {
 
 ```kotlin
 
-// 1. set up your custom logger implementation 
-
 class MyCustomLogger: Logger {
      override fun log(
         logMessage: String?,
@@ -281,42 +213,30 @@ class MyCustomLogger: Logger {
         fileName: String?,
         lineNumber: Int
     ) {
-        // your custom log implementation here...
+        // your custom log implementation here... //
         
         // Use the parameters passed into the log override to format your logcat message
-
-        // Example
 
         "Hello World".logD("Android")
         -  "Android" is the logMessage
         - The log object is "Hello World". // (you can derive it's type from logObject::class.java.simpleName)
-        - LogLevel is an enum. how you'd want to handle various logs.
+        - level is an enum. how you'd want to handle various logs.
             example
                 when (level) {
                     LogType.DEBUG -> Log.d(tag, fullMessage)
-                    LogType.INFO -> Log.i(tag, fullMessage)
-                    LogType.ERROR -> Log.e(tag, fullMessage)
-                    LogType.VERBOSE -> Log.v(tag, fullMessage)
-                    LogType.WARNING -> Log.w(tag, fullMessage)
-                    LogType.TERRIBLE_FAILURE -> Log.wtf(tag, fullMessage)
+                    // handle other log types based on your needs
                 }
         - fileName is the class name from where the object was logged.
         - lineNumber is the line from where the object was logged.
     }
 }
+```
 
-
-// 2. add this class to EasyLog Set up
 
 ```kotlin
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
-
-        // Add Timber, Bugfender or any custom logging mechanism based on your project needs
-
-
-        // set up easylog to use Custom logger
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
