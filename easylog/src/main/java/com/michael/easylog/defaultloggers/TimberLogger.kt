@@ -2,7 +2,7 @@ package com.michael.easylog.defaultloggers
 
 import com.michael.easylog.EasyLog
 import com.michael.easylog.LogType
-import com.michael.easylog.Logger
+import com.michael.easylog.domain.Logger
 import timber.log.Timber
 
 class TimberLogger : Logger {

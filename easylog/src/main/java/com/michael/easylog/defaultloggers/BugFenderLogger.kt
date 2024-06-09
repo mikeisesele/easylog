@@ -4,7 +4,7 @@ import com.michael.easylog.LogType
 
 import com.bugfender.sdk.Bugfender
 import com.michael.easylog.EasyLog
-import com.michael.easylog.Logger
+import com.michael.easylog.domain.Logger
 
 class BugFenderLogger : Logger {
     override fun log(

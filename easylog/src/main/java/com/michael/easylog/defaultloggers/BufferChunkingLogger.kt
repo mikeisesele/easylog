@@ -3,7 +3,7 @@ package com.michael.easylog.defaultloggers
 import com.michael.easylog.EasyLog
 import com.michael.easylog.LogType
 import android.util.Log
-import com.michael.easylog.Logger
+import com.michael.easylog.domain.Logger
 
 class BufferChunkingLogger : Logger {
     companion object {

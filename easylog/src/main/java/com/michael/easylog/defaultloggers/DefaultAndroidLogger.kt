@@ -3,7 +3,7 @@ package com.michael.easylog.defaultloggers
 import android.util.Log
 import com.michael.easylog.EasyLog.logTag
 import com.michael.easylog.LogType
-import com.michael.easylog.Logger
+import com.michael.easylog.domain.Logger
 
 class DefaultAndroidLogger: Logger {
     override fun log(

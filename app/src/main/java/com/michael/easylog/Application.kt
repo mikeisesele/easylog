@@ -1,8 +1,7 @@
 package com.michael.easylog
 
 import android.app.Application
-import com.bugfender.sdk.Bugfender
-import timber.log.Timber
+import com.michael.easylog.domain.DefaultLogger
 
 class App : Application() {
     override fun onCreate() {
