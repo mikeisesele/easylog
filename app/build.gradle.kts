@@ -67,7 +67,7 @@ android {
 
 dependencies {
 
-//    implementation(project(":easylog"))
+    implementation(project(":easylog"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -85,6 +85,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.github.mikeisesele:easylog:2.5.1")
+//    implementation("com.github.mikeisesele:easylog:2.5.1")
 
 }

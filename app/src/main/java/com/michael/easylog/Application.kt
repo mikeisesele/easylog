@@ -15,7 +15,8 @@ class App : Application() {
 //      Bugfender.enableUIEventLogging(this)
 //      Bugfender.enableLogcatLogging()
 
-        EasyLog.setUp {
+        EasyLog.
+        setUp {
             debugMode(BuildConfig.DEBUG)
             defaultLogger(DefaultLogger.DEFAULT_ANDROID)
             filterTag ("Rigel")
