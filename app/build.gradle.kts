@@ -37,8 +37,12 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isMinifyEnabled = false
+        }
 //        getByName("debug") {
-//            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
+//            isMinifyEnabled = false
+////            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
 //        }
     }
     compileOptions {
