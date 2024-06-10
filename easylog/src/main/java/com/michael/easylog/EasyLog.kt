@@ -10,14 +10,16 @@ import com.michael.easylog.defaultloggers.TimberLogger
 /**
  * EasyLog - A simple logging utility for Android applications.
  *
- * Usage:
- *
- *
- * 2. Initialize the logger in your application's initialization phase:
- *    Logger.setup(filterTag = "CustomTag") // EASY-LOG is set by default
+ * 1. Initialize the logger in your application's initialization phase:
+ *          EasyLog.
+ *              setUp {
+ *                  debugMode(BuildConfig.DEBUG)
+ *                  defaultLogger(DefaultLogger.DEFAULT_ANDROID)
+ *                  filterTag ("CustomTag")  // EASY-LOG is set by default
+ *              }
  *    - This filterTag would be what you can use to filter in your logcat.
  *
- * 3. Log messages using concise syntax directly on objects:
+ * 2. Log messages using concise syntax directly on objects:
  *    - "Hello".logD("This is a debug message") // This is a debug message - Hello
  *    - "World".logI("This is an info message") // This is an info message - World
  *    - 42.logE("This is an error message") // This is an error message - 42
@@ -25,12 +27,14 @@ import com.michael.easylog.defaultloggers.TimberLogger
  *    - "Warning".logW("This is a warning message") // This is a warning message - Warning
  *    - "WTF".logWtf("This should not happen") // This should not happen - WTF
  *
- * 4. Optionally, you can use default log messages:
+ * 3. Optionally, you can use default log messages:
  *    - "Another Message".log() // default message - Another Message
+ *    -  "Another Message".logInline() // default message - logs Another Message and returns the object itself
+ *    -  "Another Message".logInlineNullable() // default message - logs Another Message and returns the object itself or null
  *
  * Note:
- * - Log messages are only displayed in debug mode.
- * - Default log level is DEBUG, which can be changed during setup.
+ * - Default defaultLogger level is DEFAULT_ANDROID.
+ * others internal loggers include: FILE_LOGGER, TIMBER, BUFFER_CHUNKING, BUG_FENDER
  */
 
 object EasyLog {
