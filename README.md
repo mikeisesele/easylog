@@ -64,9 +64,6 @@ dependencyResolutionManagement {
         
         // Optional. Provide the application context only when DefaultLogger.FILE_LOGGER is used
         context()
-        
-        // Required. Build and finalize the logger setup
-        build()
     }
         
     // or use the explicit builder
