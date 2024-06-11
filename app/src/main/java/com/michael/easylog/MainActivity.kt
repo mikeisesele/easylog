@@ -18,11 +18,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        "TESTING VARIOUS LOGGERS".logInline()
         setContent {
             EasyLogTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Android".logInline(),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

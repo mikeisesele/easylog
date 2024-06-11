@@ -17,7 +17,7 @@ class App : Application() {
         EasyLog.
         setUp {
             debugMode(BuildConfig.DEBUG)
-            defaultLogger(DefaultLogger.DEFAULT_ANDROID)
+            addDefaultLogger(DefaultLogger.DEFAULT_ANDROID)
             filterTag ("Rigel")
         }
     }

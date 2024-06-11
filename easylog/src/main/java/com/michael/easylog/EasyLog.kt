@@ -42,16 +42,17 @@ object EasyLog {
     var logTag: String = IDENTIFIER
     private var logLevel: LogType = LogType.DEBUG
     private var isDebugMode: Boolean = true
-    private lateinit var logger: Logger
+    private val loggers = mutableListOf<Logger>()
 
     // Builder for EasyLog configuration
     class Builder {
 
         private var filterTag: String = IDENTIFIER
         private var debugMode: Boolean = isDebugMode
-        private var defaultLogger: DefaultLogger? = null
-        private var customLogger: Logger? = null
+        private val defaultLoggers = mutableListOf<DefaultLogger>()
+        private val customLoggers = mutableListOf<Logger>()
         private var context: Context? = null
+
 
         /**
          * Sets the custom filter tag to be used in log messages.
@@ -77,8 +78,9 @@ object EasyLog {
         fun debugMode(debugMode: Boolean) = apply { this.debugMode = debugMode }
 
         /**
+         * Optional.
          * Sets the default logger to be used for logging.
-         * The default logger is used if no custom logger is specified.
+         * The default logger [ DefaultLogger.DEFAULT_ANDROID ] is used if not specified.
          *
          * @param defaultLogger The default logger to be used for logging.
          *
@@ -91,7 +93,8 @@ object EasyLog {
          * - `DefaultLogger.BUG_FENDER`: Logs the error messages using BugFender's remote server.
          *
          */
-        fun defaultLogger(defaultLogger: DefaultLogger?) = apply { this.defaultLogger = defaultLogger }
+        fun addDefaultLogger(defaultLogger: DefaultLogger) = apply { this.defaultLoggers.add(defaultLogger) }
+
 
         /**
          * Sets the custom logger to be used for logging.
@@ -105,7 +108,7 @@ object EasyLog {
          *
          * provide a custom logger class extending the Logger interface adn override the log method.
          */
-        fun customLogger(customLogger: Logger?) = apply { this.customLogger = customLogger }
+        fun addCustomLogger(customLogger: Logger) = apply { this.customLoggers.add(customLogger) }
 
         /**
          * Sets the context to be used for logging.
@@ -119,10 +122,13 @@ object EasyLog {
         fun build() {
             logTag = filterTag
             isDebugMode = debugMode
-            logger = when {
-                customLogger != null -> customLogger!!
-                defaultLogger != null -> createLogger(defaultLogger!!, context)
-                else -> DefaultAndroidLogger() // Fallback to default logger
+            loggers.clear()
+            loggers.addAll(customLoggers)
+            defaultLoggers.forEach { defaultLogger ->
+                loggers.add(createLogger(defaultLogger, context))
+            }
+            if (loggers.isEmpty()) {
+                loggers.add(DefaultAndroidLogger()) // Fallback to default logger
             }
         }
     }
@@ -150,13 +156,15 @@ object EasyLog {
         lineNumber: Int
     ) {
         if (isDebugMode) {
-            logger.log(
-                logMessage = logMessage.ifNullSetDefault { "Logged Data" },
-                logObject = logObject,
-                level = level,
-                fileName = fileName,
-                lineNumber = lineNumber
-            )
+            loggers.forEach { logger ->
+                logger.log(
+                    logMessage = logMessage.ifNullSetDefault { "Logged Data" },
+                    logObject = logObject,
+                    level = level,
+                    fileName = fileName,
+                    lineNumber = lineNumber
+                )
+            }
         }
     }
 }
@@ -168,7 +176,7 @@ object EasyLog {
  * @param logMessage Optional message to log.
  */
 fun Any.logD(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -185,7 +193,7 @@ fun Any.logD(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logI(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -202,7 +210,7 @@ fun Any.logI(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logE(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -219,7 +227,7 @@ fun Any.logE(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logV(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -236,7 +244,7 @@ fun Any.logV(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logW(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -253,7 +261,7 @@ fun Any.logW(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logWtf(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -268,7 +276,7 @@ fun Any.logWtf(logMessage: String? = null) {
  * Uses stack trace to capture the file name and line number where the log was called.
  */
 fun Any.log() {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = null,
         logObject = this,
@@ -295,7 +303,7 @@ fun Any.log() {
  * ```
  */
 fun <T : Any> T?.logInlineNullable(logMessage: String? = null): T? {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     this?.let {
         EasyLog.log(
             logMessage = logMessage,
@@ -325,7 +333,7 @@ fun <T : Any> T?.logInlineNullable(logMessage: String? = null): T? {
  *
  */
 fun <T : Any> T.logInline(logMessage: String? = null): T {
-    val stackTraceElement = Throwable().stackTrace[1]
+    val stackTraceElement = Throwable().stackTrace[2]
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,

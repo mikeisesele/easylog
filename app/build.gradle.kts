@@ -42,7 +42,7 @@ android {
         }
 //        getByName("debug") {
 //            isMinifyEnabled = false
-////            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
+//            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
 //        }
     }
     compileOptions {
