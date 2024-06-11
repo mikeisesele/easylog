@@ -4,16 +4,19 @@ EasyLog is a lightweight, simple, and flexible logging utility for Android appli
 
 ## Features
 
-- **Custom Configuration**: Easy setup for tailored logging behavior.
-- **Multiple Logging Levels**: DEBUG, INFO, ERROR, VERBOSE, WARNING, TERRIBLE_FAILURE.
-- **Simplified Syntax**: Log directly from objects.
-- **Automatic Contextual Info**: Captures class and line number.
-- **Debug Mode Logging**: Only logs in debug mode.
-- **Seamless Integration**: Works with Timber, Bugfender, and more.
-- **Efficient Performance**: Minimal impact on performance.
-- **Advanced Capabilities**: Log nullable/non-nullable objects and return logged data.
-- **File Logging**: Log messages to a file.
-- **Buffer Chunking**: Log messages in chunks for efficiency.
+- **Simplified Syntax**: Log directly from objects for a streamlined debugging experience.
+- **Custom Configuration**: Tailor logging behavior to your specific needs using custom loggers.
+- **Seamless Integration**: Easily integrate with popular logging libraries like Timber, Bugfender, and more.
+- **Automatic Contextual Info**: Gain insights into your code with automatically captured class and line number information.
+- **Inline Logs**: Say goodbye to scattered log statements with support for inline logging, allowing you to embed log messages directly within your code.
+- **Multi-Logger Support**: Combine multiple logging solutions for simultaneous logs, enhancing flexibility and functionality.
+- **Multiple Logging Levels**: Cover all debugging scenarios with support for DEBUG, INFO, ERROR, VERBOSE, WARNING, and TERRIBLE_FAILURE levels.
+- **Debug Mode Logging**: Optimize performance by logging only in debug mode.
+- **Advanced Capabilities**: Log nullable/non-nullable objects and return logged data for enhanced debugging.
+- **File Logging**: Log messages to a file for long-term storage and analysis.
+- **Buffer Chunking**: Improve efficiency by logging messages in chunks for optimized performance.
+- **Efficient Performance**: Keep your application running smoothly with minimal impact on performance.
+
 
 ## Installation
 
@@ -57,10 +60,11 @@ dependencyResolutionManagement {
         debugMode(BuildConfig.DEBUG) 
         
         // Optional. needed when you have a custom logging implementation extending the Logger Interface
-        customLogger()
+        addCustomLogger()
         
-        // Optional. You can only use this when you need to set other DefaultLogger enums as default. 
-        defaultLogger(DefaultLogger.DEFAULT_ANDROID)
+        // Optional. You can only use this when you need to set other DefaultLogger enums as default.
+        // else DefaultLogger.DEFAULT_ANDROID is internally set as default.
+        addDefaultLogger(DefaultLogger.DEFAULT_ANDROID)
         
         // Optional. Provide the application context only when DefaultLogger.FILE_LOGGER is used
         context()
@@ -71,8 +75,7 @@ dependencyResolutionManagement {
     EasyLog.Builder()
         .filterTag("MyAppLogTag)
         .debugMode(BuildConfig.DEBUG)
-        .customLogger() 
-        .defaultLogger(DefaultLogger.DEFAULT_ANDROID) 
+        .addDefaultLogger(DefaultLogger.DEFAULT_ANDROID) 
         .context()
         .build()
 
@@ -146,7 +149,7 @@ class App: Application() {
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
-            .defaultLogger(DefaultLogger.TIMBER) 
+            .addDefaultLogger(DefaultLogger.TIMBER) 
             .build()
     }
 }
@@ -167,7 +170,7 @@ class App: Application() {
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
-            .defaultLogger(DefaultLogger.BUG_FENDER) 
+            .addDefaultLogger(DefaultLogger.BUG_FENDER) 
             .build()
     }
 }
@@ -191,7 +194,7 @@ class App: Application() {
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
-            .defaultLogger(DefaultLogger.FILE) 
+            .addDefaultLogger(DefaultLogger.FILE) 
             .context(applicataionContext) // only required during file logging
             .build()
     }
@@ -237,7 +240,25 @@ class App: Application() {
         EasyLog.Builder()
             .filterTag("MyAppLogTag)
             .debugMode(BuildConfig.DEBUG)
-            .customLogger(MyCustomLogger()) 
+            .addCustomLogger(MyCustomLogger()) 
+            .build()
+    }
+}
+
+```
+
+## Set up Multiple Logging
+
+```kotlin
+class App: Application() {
+    override fun onCreate() {
+        super.onCreate()
+        EasyLog.Builder()
+            .filterTag("MyAppLogTag)
+            .debugMode(BuildConfig.DEBUG)
+            .addDefaultLogger(DefaultLogger.DEFAULT_ANDROID)
+            .addDefaultLogger(DefaultLogger.FILE_LOGGER)
+            .context(this@App) // Required for FileLogger
             .build()
     }
 }
