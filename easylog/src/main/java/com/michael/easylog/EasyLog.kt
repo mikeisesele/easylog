@@ -355,8 +355,13 @@ private fun getStackTraceElement(): StackTraceElement {
     }
 
     // Return the first non-coroutine, non-internal frame, or fallback to a known stack frame
-    return stackTrace[1]
-//    return filteredStackTrace.firstOrNull() ?: stackTrace[1]
+    return filteredStackTrace.firstOrNull() ?: findFallbackStackFrame(stackTrace) ?: stackTrace[0]
+}
+
+private fun findFallbackStackFrame(stackTrace: Array<StackTraceElement>): StackTraceElement? {
+    // Example: Find the first stack frame outside the logging infrastructure
+    return stackTrace.firstOrNull { !it.className.contains("EasyLog") }
+        ?: stackTrace.firstOrNull()
 }
 
 
