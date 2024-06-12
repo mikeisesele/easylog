@@ -7,7 +7,7 @@ EasyLog is a lightweight, simple, and flexible logging utility for Android appli
 - **Simplified Syntax**: Log directly from objects for a streamlined debugging experience.
 - **Custom Configuration**: Tailor logging behavior to your specific needs using custom loggers.
 - **Seamless Integration**: Easily integrate with popular logging libraries like Timber, Bugfender, and more.
-- **Automatic Contextual Info**: Gain insights into your code with automatically captured class and line number information.
+- **Automatic Contextual Info**: Gain insights into your code with automatically captured class and line number information. [ with few exceptions. see below ]
 - **Inline Logs**: Say goodbye to scattered log statements with support for inline logging, allowing you to embed log messages directly within your code.
 - **Multi-Logger Support**: Combine multiple logging solutions for simultaneous logs, enhancing flexibility and functionality.
 - **Multiple Logging Levels**: Cover all debugging scenarios with support for DEBUG, INFO, ERROR, VERBOSE, WARNING, and TERRIBLE_FAILURE levels.
@@ -264,6 +264,16 @@ class App: Application() {
 }
 
 ```
+
+## Automatic Contextual Logging Exceptions
+
+Easylog provides Class and Line numbers for its logs but with some exceptions where you might notice discrepancies.
+
+The below context may provide discrepancies
+
+- Logs called from Init blocks
+- Logs called from Some Coroutine scopes or nested coroutine scopes
+- Logs called from Composables.
 
 
 ## License
