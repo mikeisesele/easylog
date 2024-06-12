@@ -354,13 +354,9 @@ private fun getStackTraceElement(): StackTraceElement {
                 !it.methodName.contains("log")
     }
 
-    // Debugging: Log the filtered stack trace elements
-    filteredStackTrace.forEach {
-        println("Filtered StackTrace: ${it.fileName}:${it.lineNumber} - ${it.methodName}")
-    }
-
     // Return the first non-coroutine, non-internal frame, or fallback to a known stack frame
-    return filteredStackTrace.firstOrNull() ?: stackTrace.first { it.fileName != null }
+    return stackTrace[1]
+//    return filteredStackTrace.firstOrNull() ?: stackTrace[1]
 }
 
 
