@@ -346,16 +346,36 @@ fun <T : Any> T.logInline(logMessage: String? = null): T {
 
 private fun getStackTraceElement(): StackTraceElement {
     val stackTrace = Throwable().stackTrace
-    for (element in stackTrace) {
-        if (!element.fileName.contains("ContinuationImpl") &&
-            !element.className.contains("EasyLog") &&
-            !element.methodName.contains("log")) {
-            return element
-        }
+    val filteredStackTrace = stackTrace.filter {
+        it.fileName != null &&
+                !it.className.contains("kotlinx.coroutines") &&
+                !it.className.contains("ContinuationImpl") &&
+                !it.className.contains("EasyLog") &&
+                !it.methodName.contains("log")
     }
-    // Fallback if no suitable stack trace element found
-    return stackTrace[0]
+
+    // Debugging: Log the filtered stack trace elements
+    filteredStackTrace.forEach {
+        println("Filtered StackTrace: ${it.fileName}:${it.lineNumber} - ${it.methodName}")
+    }
+
+    // Return the first non-coroutine, non-internal frame, or fallback to a known stack frame
+    return filteredStackTrace.firstOrNull() ?: stackTrace.first { it.fileName != null }
 }
+
+
+//private fun getStackTraceElement(): StackTraceElement {
+//    val stackTrace = Throwable().stackTrace
+//    for (element in stackTrace) {
+//        if (!element.fileName.contains("ContinuationImpl") &&
+//            !element.className.contains("EasyLog") &&
+//            !element.methodName.contains("log")) {
+//            return element
+//        }
+//    }
+//    // Fallback if no suitable stack trace element found
+//    return stackTrace[0]
+//}
 
 enum class LogType {
     DEBUG,
