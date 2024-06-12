@@ -176,7 +176,7 @@ object EasyLog {
  * @param logMessage Optional message to log.
  */
 fun Any.logD(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -193,7 +193,7 @@ fun Any.logD(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logI(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -210,7 +210,7 @@ fun Any.logI(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logE(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -227,7 +227,7 @@ fun Any.logE(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logV(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -244,7 +244,7 @@ fun Any.logV(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logW(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -261,7 +261,7 @@ fun Any.logW(logMessage: String? = null) {
  * @param logMessage Optional message to log.
  */
 fun Any.logWtf(logMessage: String? = null) {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -276,7 +276,7 @@ fun Any.logWtf(logMessage: String? = null) {
  * Uses stack trace to capture the file name and line number where the log was called.
  */
 fun Any.log() {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = null,
         logObject = this,
@@ -303,7 +303,7 @@ fun Any.log() {
  * ```
  */
 fun <T : Any> T?.logInlineNullable(logMessage: String? = null): T? {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     this?.let {
         EasyLog.log(
             logMessage = logMessage,
@@ -333,7 +333,7 @@ fun <T : Any> T?.logInlineNullable(logMessage: String? = null): T? {
  *
  */
 fun <T : Any> T.logInline(logMessage: String? = null): T {
-    val stackTraceElement = Throwable().stackTrace[2]
+    val stackTraceElement = getStackTraceElement()
     EasyLog.log(
         logMessage = logMessage,
         logObject = this,
@@ -344,6 +344,18 @@ fun <T : Any> T.logInline(logMessage: String? = null): T {
     return this
 }
 
+private fun getStackTraceElement(): StackTraceElement {
+    val stackTrace = Throwable().stackTrace
+    for (element in stackTrace) {
+        if (!element.fileName.contains("ContinuationImpl") &&
+            !element.className.contains("EasyLog") &&
+            !element.methodName.contains("log")) {
+            return element
+        }
+    }
+    // Fallback if no suitable stack trace element found
+    return stackTrace[0]
+}
 
 enum class LogType {
     DEBUG,
