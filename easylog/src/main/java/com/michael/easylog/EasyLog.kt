@@ -21,16 +21,10 @@ import com.michael.easylog.defaultloggers.TimberLogger
  *
  * 2. Log messages using concise syntax directly on objects:
  *    - "Hello".logD("This is a debug message") // This is a debug message - Hello
- *    - "World".logI("This is an info message") // This is an info message - World
- *    - 42.logE("This is an error message") // This is an error message - 42
- *    - SomeObject().logV("This is a verbose message") // This is a verbose message - SomeObject
- *    - "Warning".logW("This is a warning message") // This is a warning message - Warning
- *    - "WTF".logWtf("This should not happen") // This should not happen - WTF
  *
  * 3. Optionally, you can use default log messages:
  *    - "Another Message".log() // default message - Another Message
  *    -  "Another Message".logInline() // default message - logs Another Message and returns the object itself
- *    -  "Another Message".logInlineNullable() // default message - logs Another Message and returns the object itself or null
  *
  * Note:
  * - Default defaultLogger level is DEFAULT_ANDROID.
@@ -363,7 +357,8 @@ private fun getStackTraceElement(): StackTraceElement {
     val primaryFrame = fallbackStackFrame ?: filteredStackTrace.firstOrNull() ?: stackTrace[0]
 
     // If the primary frame is within a coroutine or composable, traverse up the stack to find the outermost frame
-    if (primaryFrame.className.startsWith("kotlinx.coroutines.") || primaryFrame.className.startsWith("androidx.compose.")) {
+    if (primaryFrame.className.startsWith("kotlinx.coroutines.") ||
+        primaryFrame.className.startsWith("androidx.compose.")) {
         var outerFrame: StackTraceElement? = primaryFrame
         var currentIndex = filteredStackTrace.indexOf(primaryFrame)
 
@@ -379,55 +374,6 @@ private fun getStackTraceElement(): StackTraceElement {
 
     return primaryFrame
 }
-
-//private fun getStackTraceElement(): StackTraceElement {
-//    val stackTrace = Throwable().stackTrace
-//
-//    // Filter out irrelevant stack trace elements
-//    val filteredStackTrace = stackTrace.filter {
-//        it.fileName != null &&
-//                !it.className.startsWith("kotlinx.coroutines.") && // Exclude kotlinx.coroutines package
-//                !it.className.contains("EasyLog") && // Exclude EasyLog class
-//                !it.methodName.contains("log") // Exclude log methods
-//    }
-//
-//    // Find the first stack frame outside the logging infrastructure
-//    val fallbackStackFrame = filteredStackTrace.firstOrNull { !it.className.contains("EasyLog") }
-//
-//    // If no suitable stack frame found, fallback to a known stack frame
-//    val primaryFrame = fallbackStackFrame ?: filteredStackTrace.firstOrNull() ?: stackTrace[0]
-//
-//    // If the primary frame is within a coroutine, traverse up the stack to find the outermost coroutine frame
-//    if (primaryFrame.className.startsWith("kotlinx.coroutines.")) {
-//        var outerCoroutineFrame: StackTraceElement? = primaryFrame
-//        var currentIndex = filteredStackTrace.indexOf(primaryFrame)
-//
-//        // Traverse up the stack until a non-coroutine frame is found
-//        while (currentIndex >= 0 && filteredStackTrace[currentIndex].className.startsWith("kotlinx.coroutines.")) {
-//            outerCoroutineFrame = filteredStackTrace[currentIndex]
-//            currentIndex--
-//        }
-//
-//        // Use the outermost coroutine frame if found, otherwise use the primary frame
-//        return outerCoroutineFrame ?: primaryFrame
-//    }
-//
-//    return primaryFrame
-//}
-
-
-//private fun getStackTraceElement(): StackTraceElement {
-//    val stackTrace = Throwable().stackTrace
-//    for (element in stackTrace) {
-//        if (!element.fileName.contains("ContinuationImpl") &&
-//            !element.className.contains("EasyLog") &&
-//            !element.methodName.contains("log")) {
-//            return element
-//        }
-//    }
-//    // Fallback if no suitable stack trace element found
-//    return stackTrace[0]
-//}
 
 enum class LogType {
     DEBUG,
