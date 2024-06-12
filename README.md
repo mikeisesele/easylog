@@ -267,9 +267,9 @@ class App: Application() {
 
 ## Automatic Contextual Logging Exceptions
 
-Easylog provides Class and Line numbers for its logs but with some exceptions where you might notice discrepancies.
+Easylog provides Class names and Line numbers for its logs but with some exceptions where you might notice discrepancies.
 
-The below context may provide discrepancies
+The below context may provide discrepancies in Class and Line numbers
 
 - Logs called from Init blocks
 - Logs called from Some Coroutine scopes or nested coroutine scopes
