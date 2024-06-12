@@ -2,13 +2,18 @@ package com.michael.easylog.defaultloggers
 
 import com.michael.easylog.LogType
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.michael.easylog.Logger
 import com.michael.easylog.logE
+import com.michael.easylog.toReadable
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.time.LocalDateTime
 
 class FileLogger(private val context: Context?) : Logger {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun log(
         logMessage: String?,
         logObject: Any,
@@ -29,7 +34,7 @@ class FileLogger(private val context: Context?) : Logger {
                 "Error converting data to string: ${e.message}"
             }
 
-            val fullMessage = "$logMessage (at $fileName:$lineNumber):: $logData\n"
+            val fullMessage = "${LocalDateTime.now().toReadable()} $logMessage (at $fileName:$lineNumber):: $logData\n"
             val logFile = File(context.filesDir, "logs.txt")
 
             // Append the log message to the file
@@ -42,3 +47,4 @@ class FileLogger(private val context: Context?) : Logger {
         }
     }
 }
+
