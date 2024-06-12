@@ -346,23 +346,74 @@ fun <T : Any> T.logInline(logMessage: String? = null): T {
 
 private fun getStackTraceElement(): StackTraceElement {
     val stackTrace = Throwable().stackTrace
+
+    // Filter out irrelevant stack trace elements
     val filteredStackTrace = stackTrace.filter {
         it.fileName != null &&
-                !it.className.contains("kotlinx.coroutines") &&
-                !it.className.contains("ContinuationImpl") &&
-                !it.className.contains("EasyLog") &&
-                !it.methodName.contains("log")
+                !it.className.startsWith("kotlinx.coroutines.") && // Exclude kotlinx.coroutines package
+                !it.className.startsWith("androidx.compose.") && // Exclude Jetpack Compose package
+                !it.className.contains("EasyLog") && // Exclude EasyLog class
+                !it.methodName.contains("log") // Exclude log methods
     }
 
-    // Return the first non-coroutine, non-internal frame, or fallback to a known stack frame
-    return filteredStackTrace.firstOrNull() ?: findFallbackStackFrame(stackTrace) ?: stackTrace[0]
+    // Find the first stack frame outside the logging infrastructure
+    val fallbackStackFrame = filteredStackTrace.firstOrNull { !it.className.contains("EasyLog") }
+
+    // If no suitable stack frame found, fallback to a known stack frame
+    val primaryFrame = fallbackStackFrame ?: filteredStackTrace.firstOrNull() ?: stackTrace[0]
+
+    // If the primary frame is within a coroutine or composable, traverse up the stack to find the outermost frame
+    if (primaryFrame.className.startsWith("kotlinx.coroutines.") || primaryFrame.className.startsWith("androidx.compose.")) {
+        var outerFrame: StackTraceElement? = primaryFrame
+        var currentIndex = filteredStackTrace.indexOf(primaryFrame)
+
+        // Traverse up the stack until a non-coroutine and non-composable frame is found
+        while (currentIndex >= 0 && (filteredStackTrace[currentIndex].className.startsWith("kotlinx.coroutines.") || filteredStackTrace[currentIndex].className.startsWith("androidx.compose."))) {
+            outerFrame = filteredStackTrace[currentIndex]
+            currentIndex--
+        }
+
+        // Use the outermost frame if found, otherwise use the primary frame
+        return outerFrame ?: primaryFrame
+    }
+
+    return primaryFrame
 }
 
-private fun findFallbackStackFrame(stackTrace: Array<StackTraceElement>): StackTraceElement? {
-    // Example: Find the first stack frame outside the logging infrastructure
-    return stackTrace.firstOrNull { !it.className.contains("EasyLog") }
-        ?: stackTrace.firstOrNull()
-}
+//private fun getStackTraceElement(): StackTraceElement {
+//    val stackTrace = Throwable().stackTrace
+//
+//    // Filter out irrelevant stack trace elements
+//    val filteredStackTrace = stackTrace.filter {
+//        it.fileName != null &&
+//                !it.className.startsWith("kotlinx.coroutines.") && // Exclude kotlinx.coroutines package
+//                !it.className.contains("EasyLog") && // Exclude EasyLog class
+//                !it.methodName.contains("log") // Exclude log methods
+//    }
+//
+//    // Find the first stack frame outside the logging infrastructure
+//    val fallbackStackFrame = filteredStackTrace.firstOrNull { !it.className.contains("EasyLog") }
+//
+//    // If no suitable stack frame found, fallback to a known stack frame
+//    val primaryFrame = fallbackStackFrame ?: filteredStackTrace.firstOrNull() ?: stackTrace[0]
+//
+//    // If the primary frame is within a coroutine, traverse up the stack to find the outermost coroutine frame
+//    if (primaryFrame.className.startsWith("kotlinx.coroutines.")) {
+//        var outerCoroutineFrame: StackTraceElement? = primaryFrame
+//        var currentIndex = filteredStackTrace.indexOf(primaryFrame)
+//
+//        // Traverse up the stack until a non-coroutine frame is found
+//        while (currentIndex >= 0 && filteredStackTrace[currentIndex].className.startsWith("kotlinx.coroutines.")) {
+//            outerCoroutineFrame = filteredStackTrace[currentIndex]
+//            currentIndex--
+//        }
+//
+//        // Use the outermost coroutine frame if found, otherwise use the primary frame
+//        return outerCoroutineFrame ?: primaryFrame
+//    }
+//
+//    return primaryFrame
+//}
 
 
 //private fun getStackTraceElement(): StackTraceElement {
