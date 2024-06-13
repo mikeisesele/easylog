@@ -1,6 +1,8 @@
 package com.michael.easylog
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.michael.easylog.defaultloggers.BufferChunkingLogger
 import com.michael.easylog.defaultloggers.BugFenderLogger
 import com.michael.easylog.defaultloggers.DefaultAndroidLogger
@@ -136,7 +138,7 @@ object EasyLog {
                 DefaultLogger.BUFFER_CHUNKING -> BufferChunkingLogger()
                 DefaultLogger.BUG_FENDER -> BugFenderLogger()
                 DefaultLogger.DEFAULT_ANDROID -> DefaultAndroidLogger()
-                DefaultLogger.FILE_LOGGER -> FileLogger(context!!)
+                DefaultLogger.FILE_LOGGER -> FileLogger(context!!,)
                 DefaultLogger.TIMBER -> TimberLogger()
         }
     }
@@ -156,7 +158,7 @@ object EasyLog {
                     logObject = logObject,
                     level = level,
                     fileName = fileName,
-                    lineNumber = lineNumber
+                    lineNumber = lineNumber,
                 )
             }
         }
@@ -338,16 +340,35 @@ fun <T : Any> T.logInline(logMessage: String? = null): T {
     return this
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun <T : Any> T.logToFile(
+    logMessage: String? = null,
+    fileName: String? = null,
+    context: Context,
+    shouldDeleteExistingFile: Boolean = true
+): T {
+    val stackTraceElement = getStackTraceElement()
+    val fileLogger = FileLogger(context, fileName, shouldDeleteExistingFile)
+    fileLogger.log(
+        logMessage = logMessage,
+        logObject = this,
+        level = LogType.DEBUG,
+        fileName = stackTraceElement.fileName,
+        lineNumber = stackTraceElement.lineNumber,
+    )
+    return this
+}
+
 private fun getStackTraceElement(): StackTraceElement {
     val stackTrace = Throwable().stackTrace
 
     // Filter out irrelevant stack trace elements
     val filteredStackTrace = stackTrace.filter {
         it.fileName != null &&
-                !it.className.startsWith("kotlinx.coroutines.") && // Exclude kotlinx.coroutines package
-                !it.className.startsWith("androidx.compose.") && // Exclude Jetpack Compose package
-                !it.className.contains("EasyLog") && // Exclude EasyLog class
-                !it.methodName.contains("log") // Exclude log methods
+        !it.className.startsWith("kotlinx.coroutines.") &&
+        !it.className.startsWith("androidx.compose.") &&
+        !it.className.contains("EasyLog") &&
+        !it.methodName.contains("log")
     }
 
     // Find the first stack frame outside the logging infrastructure
