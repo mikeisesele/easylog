@@ -17,6 +17,22 @@ EasyLog is a lightweight, simple, and flexible logging utility for Android appli
 - **Buffer Chunking**: Improve efficiency by logging messages in chunks for optimized performance.
 - **Efficient Performance**: Keep your application running smoothly with minimal impact on performance.
 
+## EasyLog Library Requirements
+
+The EasyLog library 3.0.2 and below requires a minimum SDK version of 24. Future Versions will support lower API versions
+
+1. **Increase your project's `minSdkVersion` to 24 or higher**:
+   ```groovy
+   android {
+       defaultConfig {
+           minSdkVersion 24
+           ...
+       }
+   }
+   ```
+   
+   
+
 
 ## Installation
 
