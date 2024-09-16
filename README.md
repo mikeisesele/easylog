@@ -61,6 +61,13 @@ dependencyResolutionManagement {
 }
 ```
 
+```kotlin
+// enable build config in app build.gradle file
+buildFeatures {
+        buildConfig = true // enable support for @BuildConfig
+    }
+```
+
 ## Usage
 
 1. **Enable Debugging**: Ensure your application is in debug mode.
