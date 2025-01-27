@@ -26,7 +26,9 @@ class FileLogger(
     private val logFile: File by lazy {
         val file = File(context?.filesDir, logFileName)
         if (shouldDeleteExistingFile) {
-            file.delete()
+            if (file.exists()) {
+                file.delete()
+            }
         }
         file
     }
@@ -47,11 +49,8 @@ class FileLogger(
         }
 
         try {
-            val logData = try {
-                logObject.toString()
-            } catch (e: Exception) {
-                "Error converting data to string: ${e.message}"
-            }
+            val logData = try { logObject.toString() }
+            catch (e: Exception) { "Error converting data to string: ${e.message}" }
 
             val fullMessage = "${LocalDateTime.now().toReadable()} $logMessage (at $fileName:$lineNumber):: $logData\n"
 

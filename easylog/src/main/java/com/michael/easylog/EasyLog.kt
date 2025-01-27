@@ -129,6 +129,13 @@ object EasyLog {
         }
     }
 
+    @JvmStatic // make it callable from Java as a static method
+    fun setUp(action: BuilderAction) {
+        val builder = Builder()
+        action.apply(builder)
+        builder.build()
+    }
+
     fun setUp(builder: Builder.() -> Unit) {
         Builder().apply(builder).build()
     }
@@ -138,7 +145,7 @@ object EasyLog {
                 DefaultLogger.BUFFER_CHUNKING -> BufferChunkingLogger()
                 DefaultLogger.BUG_FENDER -> BugFenderLogger()
                 DefaultLogger.DEFAULT_ANDROID -> DefaultAndroidLogger()
-                DefaultLogger.FILE_LOGGER -> FileLogger(context!!,)
+                DefaultLogger.FILE_LOGGER -> FileLogger(context!!)
                 DefaultLogger.TIMBER -> TimberLogger()
         }
     }

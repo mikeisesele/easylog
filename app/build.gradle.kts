@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -89,6 +87,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-//    implementation("com.github.mikeisesele:easylog:2.5.1")
+//    implementation("com.github.mikeisesele:easylog:3.0.2")
 
 }
