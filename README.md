@@ -103,7 +103,8 @@ buildFeatures {
         .build()
 
 
-    // NOTE: Internally, debugMode is true by default. to prevent logging on production, do not manually set this to true. 
+    // NOTE: Internally, debugMode is true by default. to prevent logging on production, 
+    // do not manually set this to true. 
     // rather use BuildConfig.DEBUG as the parameter, [ BuildConfig.DEBUG returns false in release environment ]
     // or better still use environment variables with BuildVariants.
 
