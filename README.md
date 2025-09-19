@@ -245,6 +245,39 @@ MIT License - see LICENSE file for details
 ## 🙋‍♂️ Support
 - **Issues:** [GitHub Issues](https://github.com/mikeisesele/easylog/issues)
 
----
+⚠️ Important Considerations
+Performance & Production Use
+
+Reflection overhead: EasyLog v4 uses Kotlin reflection for enhanced object formatting, which adds computational overhead
+Development focus: Designed primarily for development and testing environments where debugging visibility outweighs performance concerns
+Production recommendations:
+
+Use minimumLogLevel(LogType.WARNING) or higher in production builds
+Consider disabling complex object logging in release builds via debugMode(false)
+Monitor app performance when logging large or deeply nested objects
+
+
+
+Technical Limitations
+
+Obfuscated code: R8/ProGuard obfuscation may affect property names in formatted output
+Sealed classes: Some sealed classes or classes with restricted reflection access may display simplified output
+Memory usage: Complex object trees with circular references are handled safely but may use additional memory
+Thread safety: While EasyLog is thread-safe, logging very large objects concurrently may impact performance
+
+Best Practices
+
+Development workflow: Use detailed object logging during development and debugging phases
+Testing environments: Leverage full EasyLog capabilities in staging/testing environments
+Production deployment: Configure appropriate log levels to balance debugging needs with app performance
+Large datasets: Consider logging subsets or summaries of large collections rather than complete datasets
+
+Scope & Compatibility
+
+Android focus: Optimized for Android development workflows and Android Studio logcat integration
+Minimum SDK: Requires Android API 24+ due to reflection requirements
+Kotlin interop: Full compatibility with Kotlin data classes, sealed classes, and standard collections
+Java compatibility: Works with Java objects but optimal formatting designed for Kotlin constructs
+
 
 **Made with ❤️ by [Michael Isesele](https://github.com/mikeisesele)**
