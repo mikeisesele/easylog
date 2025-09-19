@@ -1,9 +1,19 @@
 package com.michael.easylog
 
+/**
+ * Default logger enumeration
+ */
 enum class DefaultLogger {
-    BUFFER_CHUNKING,
-    BUG_FENDER,
     DEFAULT_ANDROID,
     FILE_LOGGER,
-    TIMBER
+
+    // Deprecated - kept for backward compatibility
+    @Deprecated("Use DEFAULT_ANDROID instead")
+    TIMBER,
+
+    @Deprecated("Use DEFAULT_ANDROID instead")
+    BUFFER_CHUNKING,
+
+    @Deprecated("Use DEFAULT_ANDROID instead")
+    BUG_FENDER
 }

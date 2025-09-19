@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.michael.easylog"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -60,12 +60,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.kotlin.reflect)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    api("com.bugfender.sdk:android:3.2.0")
-    api("com.jakewharton.timber:timber:5.0.1")
 }
 
 

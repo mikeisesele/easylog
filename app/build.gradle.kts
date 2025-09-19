@@ -1,18 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
-//// Read properties file and extract the API key
-//val properties = Properties()
-//properties.load(project.rootProject.file("local.properties").inputStream())
-
-// Access the API key
-//val bugfenderApiKey: String = properties.getProperty("BUGFENDER_API_KEY")
 
 android {
     namespace = "com.michael.easylog"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.michael.easylog"
@@ -38,17 +33,15 @@ android {
         debug {
             isMinifyEnabled = false
         }
-//        getByName("debug") {
-//            isMinifyEnabled = false
-//            buildConfigField("String", "BUGFENDER_API_KEY", bugfenderApiKey)
-//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+        }
     }
     buildFeatures {
         compose = true
