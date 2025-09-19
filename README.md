@@ -245,6 +245,13 @@ MIT License - see LICENSE file for details
 ## 🙋‍♂️ Support
 - **Issues:** [GitHub Issues](https://github.com/mikeisesele/easylog/issues)
 
+Example Outputs
+
+<img width="581" height="328" alt="Screenshot 2025-09-19 at 8 41 15 PM" src="https://github.com/user-attachments/assets/0bb24053-1feb-4fe5-8e21-7f30fa1f84dc" />
+<img width="581" height="328" alt="Screenshot 2025-09-19 at 8 41 05 PM" src="https://github.com/user-attachments/assets/deb2c94a-aecf-4173-9087-2813b636415c" />
+<img width="610" height="739" alt="Screenshot 2025-09-19 at 8 40 45 PM" src="https://github.com/user-attachments/assets/978c7969-309d-475f-b7a3-5f38db25e181" />
+
+
 ⚠️ Important Considerations
 Performance & Production Use
 
