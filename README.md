@@ -1,313 +1,250 @@
-# EasyLog
+# EasyLog v2
 
-EasyLog is a lightweight, simple, and flexible logging utility for Android applications. It provides a concise syntax for logging messages directly from objects and supports various default and custom loggers.
+A lightweight, intelligent logging library for Android with beautiful tree-structured output and smart object detection.
 
-## Features
+## ✨ What's New in v2
 
-- **Simplified Syntax**: Log directly from objects for a streamlined debugging experience.
-- **Custom Configuration**: Tailor logging behavior to your specific needs using custom loggers.
-- **Seamless Integration**: Easily integrate with popular logging libraries like Timber, Bugfender, and more.
-- **Automatic Contextual Info**: Gain insights into your code with automatically captured class and line number information. [ with few exceptions. see below ]
-- **Inline Logs**: Say goodbye to scattered log statements with support for inline logging, allowing you to embed log messages directly within your code.
-- **Multi-Logger Support**: Combine multiple logging solutions for simultaneous logs, enhancing flexibility and functionality.
-- **Multiple Logging Levels**: Cover all debugging scenarios with support for DEBUG, INFO, ERROR, VERBOSE, WARNING, and TERRIBLE_FAILURE levels.
-- **Debug Mode Logging**: Optimize performance by logging only in debug mode.
-- **Advanced Capabilities**: Log nullable/non-nullable objects and return logged data for enhanced debugging.
-- **File Logging**: Log messages to a file for long-term storage and analysis.
-- **Buffer Chunking**: Improve efficiency by logging messages in chunks for optimized performance.
-- **Efficient Performance**: Keep your application running smoothly with minimal impact on performance.
+- **🌳 Tree-structured output** for complex objects and collections
+- **🔍 Smart object detection** with automatic formatting
+- **⚡ Runtime log level filtering** 
+- **🛡️ Enhanced reflection safety** 
+- **📊 Grouped logging** with `logMany()`
+- **🎯 Zero breaking changes** - drop-in upgrade
 
-## EasyLog Library Requirements
+## 📱 Quick Start
 
-The EasyLog library 3.0.2 and below requires a minimum SDK version of 24. Future Versions will support lower API versions
+### 1. Add Dependency
 
-1. **Increase your project's `minSdkVersion` to 24 or higher**:
-   ```groovy
-   android {
-       defaultConfig {
-           minSdkVersion 24
-           ...
-       }
-   }
-   ```
-   
-   
-
-
-## Installation
-
-1. To use EasyLog in your Android project, add the following dependency to your `build.gradle` file:
-
-```groovy
-# Groovy
-implementation 'com.github.mikeisesele:easylog:latestVersion'
+```kotlin
+// build.gradle.kts (app)
+implementation("com.github.mikeisesele:easylog:2.0.0")
 ```
 
 ```kotlin
-// Kotlin dsl
-implementation("com.github.mikeisesele:easylog:latestVersion")
-```
-
-2. Configure Jitpack in your settings.gradle file
-
-```kotlin
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") } // Add this line  <==
-    }
+// settings.gradle.kts
+repositories {
+    maven { url = uri("https://jitpack.io") }
 }
 ```
 
-```kotlin
-// enable build config in app build.gradle file
-buildFeatures {
-        buildConfig = true // enable support for @BuildConfig
-    }
-```
-
-## Usage
-
-1. **Enable Debugging**: Ensure your application is in debug mode.
-
-2. **Initialization**: Initialization: Initialize in your Application class, BaseActivity or MainActivity:
-
-   ```kotlin
-    EasyLog.setUp {
-        // Optional. Filter tag for log messages. Defaults to EASY-LOG
-        filterTag("MyAppLogTag")
-        
-        // Required. Specify debug mode
-        debugMode(BuildConfig.DEBUG) 
-        
-        // Optional. needed when you have a custom logging implementation extending the Logger Interface
-        addCustomLogger()
-        
-        // Optional. You can only use this when you need to set other DefaultLogger enums as default.
-        // else DefaultLogger.DEFAULT_ANDROID is internally set as default.
-        addDefaultLogger(DefaultLogger.DEFAULT_ANDROID)
-        
-        // Optional. Provide the application context only when DefaultLogger.FILE_LOGGER is used
-        context()
-    }
-        
-    // or use the explicit builder
-        
-    EasyLog.Builder()
-        .filterTag("MyAppLogTag)
-        .debugMode(BuildConfig.DEBUG)
-        .addDefaultLogger(DefaultLogger.DEFAULT_ANDROID) 
-        .context()
-        .build()
-
-
-    // NOTE: Internally, debugMode is true by default. to prevent logging on production, 
-    // do not manually set this to true. 
-    // rather use BuildConfig.DEBUG as the parameter, [ BuildConfig.DEBUG returns false in release environment ]
-    // or better still use environment variables with BuildVariants.
-
-    ```
-
-3. **Default Logging**: Log messages using concise syntax directly on objects:
-
- ```kotlin
-    123.logD("Integer: ")        
-    123.0.logI("Double: ")
-    "John".logE("String: ")
-    true.logV("Boolean: ")
-    "Default Log".log()
-  ```
-
-  ```kotlin
-  2024-06-01 12:03:53.325 27193 CustomTag: Integer: 123 (MainActivity.kt:77) // assuming the log was called from MainActivity line 77
-  2024-06-01 12:03:53.325 27193 CustomTag: Double: 123.0 (MainViewModel.kt:78) // assuming the log was called from MainViewModel line 78
-  2024-06-01 12:03:53.325 27193 CustomTag: String: John (MainRepository.kt:79) // assuming the log was called from MainRepository line 79
-  2024-06-01 12:03:53.326 27193 CustomTag: Boolean: true (HomeScreenComposable.kt:80) // assuming the log was called from HomeScreenComposable line 80
-  2024-06-01 12:03:53.326 27193 CustomTag: String: Default Log (HomeScreenComposable.kt:12) // assuming the log was called from HomeScreenComposable line 12
-  
-  // each source i.e. (MainActivity.kt:77) for example... are clickable.
-  ```
-
-4. **Inline Logging**: Log on nullable and non-nullable objects and return the logged data for continued system processing
-
-  ```kotlin
-
-     val myNullableObject: MyClass? = getNullableObject()
-     myNullableObject.logNullableInline()
-
-     // logInline the values of savedInstanceState [nullable]
-       override fun onCreate(savedInstanceState: Bundle?) {
-          super.onCreate(savedInstanceState.logNullableInline()) Logs Inline  <==
-     }
-  
-     val myObject: MyClass = getNonNullableObject()
-      myObject.logInline() //  log message is optional to pass
-  
-      // log the value of contact screen state [non-nullable]
-     ExampleScreen(
-          viewModelState = state.logInline(),  Logs Inline  <==
-      )
- ```
-
-### Configuration
-
-- Default Loggers
-
-EasyLog supports several default loggers. Choose any as an argument in defaultLogger() during setup:
-
-    BUFFER_CHUNKING - Logs messages in chunks.
-    BUG_FENDER - Logs messages to BugFender.
-    DEFAULT_ANDROID - Logs messages using the default Android logger.
-    FILE_LOGGER - Logs messages to a file.
-    TIMBER - Logs messages using Timber.
-    
-## Set up Logging with Timber
+### 2. Initialize (Application class)
 
 ```kotlin
-class App: Application() {
+class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        EasyLog.Builder()
-            .filterTag("MyAppLogTag)
-            .debugMode(BuildConfig.DEBUG)
-            .addDefaultLogger(DefaultLogger.TIMBER) 
-            .build()
-    }
-}
-// Note: Timber dependency is not needed within your app as it is contained within the library
-```
-
-## Set up Remote Logging with Bugfender
-
-```kotlin
-class App: Application() {
-    override fun onCreate() {
-        super.onCreate()
-        // Get your BUGFENDER_API_KEY. at https://bugfender.com/
-        Bugfender.init(this, BUGFENDER_API_KEY, BuildConfig.DEBUG, true)
-        Bugfender.enableUIEventLogging(this)
-        Bugfender.enableLogcatLogging()
-
-        EasyLog.Builder()
-            .filterTag("MyAppLogTag)
-            .debugMode(BuildConfig.DEBUG)
-            .addDefaultLogger(DefaultLogger.BUG_FENDER) 
-            .build()
-    }
-}
-// Just so you know, bugfender dependency is not needed within your app because it is in the library.
-```
-
-
-## Set up Logging to File
-
-```kotlin
-
-1. // add the following to manifest
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-// then proceed to set up
-
-class App: Application() {
-    override fun onCreate() {
-        super.onCreate()
-        EasyLog.Builder()
-            .filterTag("MyAppLogTag)
-            .debugMode(BuildConfig.DEBUG)
-            .addDefaultLogger(DefaultLogger.FILE) 
-            .context(applicataionContext) // only required during file logging
-            .build()
+        
+        EasyLog.setUp {
+            debugMode(BuildConfig.DEBUG)
+            filterTag("MyApp")  // Optional: custom tag
+            minimumLogLevel(LogType.DEBUG)  // New: runtime filtering
+        }
     }
 }
 ```
 
-## Set up Custom Logging 
+### 3. Enable BuildConfig
 
 ```kotlin
+// build.gradle.kts (app)
+android {
+    buildFeatures {
+        buildConfig = true
+    }
+}
+```
 
-class MyCustomLogger: Logger {
-     override fun log(
-        logMessage: String?,
+## 🚀 Usage Examples
+
+### Basic Logging
+```kotlin
+"Hello World".logD("Greeting")
+42.logI("Answer")
+true.logE("Boolean value")
+```
+
+### Smart Object Formatting
+```kotlin
+data class User(val name: String, val age: Int, val emails: List<String>)
+
+val user = User("John", 30, listOf("john@work.com", "john@personal.com"))
+user.logD("User profile")
+```
+
+**Output:**
+```
+🔍 USER PROFILE: at MainActivity.kt:45
+╭─ User (com.example.model)
+├─ name: "John"
+├─ age: 30
+╰─ emails: List[2]
+   ├─ [0]: "john@work.com"
+   ╰─ [1]: "john@personal.com"
+```
+
+### Collections & Arrays
+```kotlin
+listOf("apple", "banana", "cherry").logD("Fruits")
+arrayOf(1, 2, 3, 4, 5).logI("Numbers")
+```
+
+**Output:**
+```
+🔍 FRUITS: at MainActivity.kt:50
+╭─ List[3]
+├─ [0]: "apple"
+├─ [1]: "banana"
+╰─ [2]: "cherry"
+```
+
+### Grouped Logging
+```kotlin
+logMany(
+    header = "App Configuration",
+    BuildConfig.DEBUG,
+    BuildConfig.VERSION_NAME,
+    "Environment: Production",
+    42
+)
+```
+
+**Output:**
+```
+🔍 ╭─ APP CONFIGURATION at MainActivity.kt:55
+🔍 ├─ [1] true
+🔍 ├─ [2] "1.0.0"
+🔍 ├─ [3] "Environment: Production"
+🔍 ╰─ [4] 42
+```
+
+### Inline Logging
+```kotlin
+val result = "Processing data"
+    .logInline("Step 1")
+    .uppercase()
+    .logInline("Step 2")
+
+// Logs each step and returns the value for chaining
+```
+
+### Nullable Objects
+```kotlin
+val nullableUser: User? = getUser()
+nullableUser.logInlineNullable("User lookup result")
+```
+
+## ⚙️ Advanced Configuration
+
+### Runtime Log Filtering
+```kotlin
+// Only show warnings and errors
+EasyLog.setMinimumLogLevel(LogType.WARNING)
+
+// Check current level
+val currentLevel = EasyLog.getMinimumLogLevel()
+```
+
+### File Logging
+```kotlin
+EasyLog.setUp {
+    debugMode(BuildConfig.DEBUG)
+    addDefaultLogger(DefaultLogger.FILE_LOGGER)
+    context(applicationContext)  // Required for file logging
+}
+```
+
+### Custom Logger
+```kotlin
+class MyCustomLogger : Logger {
+    override fun log(
+        logMessage: String,
         logObject: Any,
         level: LogType,
         fileName: String?,
         lineNumber: Int
     ) {
-        // your custom log implementation here... //
-        
-        // Use the parameters passed into the log override to format your logcat message
-
-        "Hello World".logD("Android")
-        -  "Android" is the logMessage
-        - The log object is "Hello World". // (you can derive it's type from logObject::class.java.simpleName)
-        - level is an enum. how you'd want to handle various logs.
-            example
-                when (level) {
-                    LogType.DEBUG -> Log.d(tag, fullMessage)
-                    // handle other log types based on your needs
-                }
-        - fileName is the class name from where the object was logged.
-        - lineNumber is the line from where the object was logged.
+        // Your custom implementation
     }
+}
+
+EasyLog.setUp {
+    addCustomLogger(MyCustomLogger())
 }
 ```
 
+## 📊 Log Levels
 
+- `logV()` - Verbose 📝
+- `logD()` - Debug 🔍  
+- `logI()` - Info ℹ️
+- `logW()` - Warning ⚠️
+- `logE()` - Error ❌
+- `logWtf()` - What a Terrible Failure 💥
+
+## 🔧 Migration from v1
+
+**Zero code changes required!** EasyLog v2 is 100% backward compatible.
+
+### New Features Available:
+- Enhanced object formatting (automatic)
+- `minimumLogLevel()` configuration
+- `logMany()` function
+- Better performance and safety
+
+### Deprecated (still works):
 ```kotlin
-class App: Application() {
-    override fun onCreate() {
-        super.onCreate()
-        EasyLog.Builder()
-            .filterTag("MyAppLogTag)
-            .debugMode(BuildConfig.DEBUG)
-            .addCustomLogger(MyCustomLogger()) 
-            .build()
-    }
-}
+// Old way (still works)
+.defaultLogger(DefaultLogger.DEFAULT_ANDROID)
 
+// New way (recommended)
+.addDefaultLogger(DefaultLogger.DEFAULT_ANDROID)
 ```
 
-## Set up Multiple Logging
+## 📋 Requirements
 
-```kotlin
-class App: Application() {
-    override fun onCreate() {
-        super.onCreate()
-        EasyLog.Builder()
-            .filterTag("MyAppLogTag)
-            .debugMode(BuildConfig.DEBUG)
-            .addDefaultLogger(DefaultLogger.DEFAULT_ANDROID)
-            .addDefaultLogger(DefaultLogger.FILE_LOGGER)
-            .context(this@App) // Required for FileLogger
-            .build()
-    }
-}
+- **Minimum SDK:** 24
+- **Kotlin reflection:** Auto-included
+- **ProGuard:** No configuration needed
+
+## 🎯 Best Practices
+
+1. **Use meaningful messages:**
+   ```kotlin
+   user.logD("After API call")  // Good
+   user.logD()  // Works, but less descriptive
+   ```
+
+2. **Filter by tag in Logcat:**
+   ```
+   tag:MyApp
+   ```
+
+3. **Use appropriate log levels:**
+   ```kotlin
+   result.logD("Debug info")      // Development
+   error.logE("API failed")       // Production issues
+   config.logI("App started")     // Important events
+   ```
+
+4. **Leverage inline logging:**
+   ```kotlin
+   val processed = rawData
+       .logInline("Raw data")
+       .processStep1()
+       .logInline("After step 1")
+       .processStep2()
+       .logInline("Final result")
+   ```
+
+## 📄 License
 
 ```
+MIT License - see LICENSE file for details
+```
 
-## Automatic Contextual Logging Exceptions
+## 🙋‍♂️ Support
+- **Issues:** [GitHub Issues](https://github.com/mikeisesele/easylog/issues)
 
-Easylog provides Class names and Line numbers for its logs but with some exceptions where you might notice discrepancies.
+---
 
-The below context may provide discrepancies in Class and Line numbers
-
-- Logs called from Init blocks
-- Logs called from Some Coroutine scopes or nested coroutine scopes
-- Logs called from Composables.
-
-
-## License
-
-EasyLog is released under the [MIT License](LICENSE).
-
-## Contributing
-
-Contributions are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on GitHub.
-
-## Acknowledgements
-
-This library is built with ❤️ by [Michael Isesele].
+**Made with ❤️ by [Michael Isesele](https://github.com/mikeisesele)**
