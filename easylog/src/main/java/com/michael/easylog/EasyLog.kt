@@ -1,9 +1,7 @@
 package com.michael.easylog
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.michael.easylog.defaultloggers.DefaultAndroidLogger
 import com.michael.easylog.defaultloggers.FileLogger
 import kotlin.reflect.KProperty1
@@ -11,7 +9,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
 /**
- * EasyLog v2 - Enhanced logging utility for Android applications with improved formatting.
+ * EasyLog v4 - Enhanced logging utility for Android applications with improved formatting.
  */
 object EasyLog {
     private const val IDENTIFIER = "EASY-LOG"
@@ -653,7 +651,7 @@ object EasyLog {
         // Log the complete tree structure
         EasyLog.logToAndroid(LogType.DEBUG, sb.toString().trimEnd())
     }
-    
+
 
     private fun logToAndroid(level: LogType, message: String, tag: String = logTag) {
         when (level) {
