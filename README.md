@@ -1,8 +1,8 @@
-# EasyLog v2
+# EasyLog v4
 
 A lightweight, intelligent logging library for Android with beautiful tree-structured output and smart object detection.
 
-## ✨ What's New in v2
+## ✨ What's New in v4
 
 - **🌳 Tree-structured output** for complex objects and collections
 - **🔍 Smart object detection** with automatic formatting
@@ -17,7 +17,7 @@ A lightweight, intelligent logging library for Android with beautiful tree-struc
 
 ```kotlin
 // build.gradle.kts (app)
-implementation("com.github.mikeisesele:easylog:2.0.0")
+implementation("com.github.mikeisesele:easylog:4.0.0")
 ```
 
 ```kotlin
