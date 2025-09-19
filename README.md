@@ -1,8 +1,8 @@
-# EasyLog v4
+# EasyLog
 
 A lightweight, intelligent logging library for Android with beautiful tree-structured output and smart object detection.
 
-## ✨ What's New in v4
+## ✨ What's New
 
 - **🌳 Tree-structured output** for complex objects and collections
 - **🔍 Smart object detection** with automatic formatting
